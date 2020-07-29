@@ -155,19 +155,9 @@ echo "</p>";
                             <br>
                             <div class="form_group">
                                 <label for="valor_negociar">Numero de parcelas</label>
-                                <script>
-                                let parcelas = 200 - 102
-                                if(parcelas <= 100){
-                                    <select type="number" name="valor_negociar" id="valor_negociar" data-valor-negociar="" class="form-control">
-                                        <option value="1">A vista</option> 
-                                    </select>
-                                } else{
-                                    <select type="number" name="valor_negociar" id="valor_negociar" data-valor-negociar="" class="form-control">
-                                        <option value="1">1</option> 
-                                        <option value="2">2</option> 
-                                    </select>
-                                }
-                                </script>
+                                <select type="number" name="valor_negociar" id="valor_negociar" class="form-control">
+
+                                </select>
                             </div>
                             <hr>
                             <h5>Dividas a serem negociadas</h5>
@@ -250,6 +240,9 @@ echo "</p>";
 
         for (let i = 0; i < arrayDivida.length; i++) {
             if (arrayDivida[i]['divida'] == true) {
+                if(arrayDivida[i]['status'] == 'Negociado'){
+                    continue
+                }
                 valor += parseInt(arrayDivida[i]['valor'])
                 arrayParaTabelaDivida.push({
                     id_dividas: arrayDivida[i]['id_dividas'],
@@ -270,6 +263,10 @@ echo "</p>";
         $('#tabela_cliente').bootstrapTable({
             data: arrayParaTabelaDivida
         })
+        if($('#tabela_cliente').bootstrapTable('getData') == 0){
+            return
+        } 
+        //se a tabela estiver vazia, o modal de negociar dividas nao vai abrir, o return faz um retorno vazio
         $('#tabela_cliente').bootstrapTable('refreshOptions', {
             classes: "table"
         })
@@ -366,24 +363,69 @@ echo "</p>";
 
     function calcula() {
         let conta = $('#valorTotal_negociar').attr('data-valor-divida') * 0.1;
-        // alert(conta);
-        if (conta <= $('#valor_entrada').val()) {
-            console.log("tudo certo")
-        } else {
-            $('#vd').append('Entrada de no mínimo 10%')
-            return;
+        
+        if($('#mensagemAppend').length > 0 ){
+            if (conta <= $('#valor_entrada').val()){
+                $('#mensagemAppend').remove()
+            }
+        } else{
+            if (conta <= $('#valor_entrada').val()) {
+                console.log("tudo certo")
+            } else {
+               $('#vd').append(`<p id='mensagemAppend'>Entrada de no mínimo 10%</p>`)
+            }
         }
     }
 
-    // function parcelas(){
-    //     let parcelas = $('#valorTotal_negociar').attr('data-valor-divida') - $('valor_entrada').val();
-    //     if(parcelas < 80){
-    //         // <select type="number" name="valor_negociar" id="valor_negociar" class="form-control">
-    //         //     <option value="1">1</option> 
-    //         //     <option value="2">2</option> 
-    //         // </select>
-    //     } else{
-    //         alert('ffa')
-    //     }
-    // }
+    // ====================================
+    // ---função da options das parcelas---
+    // ====================================  
+
+    function parcelas() {
+        let parcelas = $('#valorTotal_negociar').attr('data-valor-divida') - $('#valor_entrada').val()
+
+        if (parcelas <= 100) {
+            $('#valor_negociar').append($('<option>', {
+                value: 1,
+                text: 'A vista'
+            }));
+        } else if (parcelas <= 200) {
+            for (let i = 1; i <= 2; i++) {
+                $('#valor_negociar').append($('<option>', {
+                    value: [i],
+                    text: [i]
+                }));
+            }
+        } else if (parcelas <= 300){
+            for (let i = 1; i <= 3; i++) {
+                $('#valor_negociar').append($('<option>', {
+                    value: [i],
+                    text: [i]
+                }));
+            }
+        } else if (parcelas <= 400){
+            for (let i = 1; i <= 4; i++) {
+                $('#valor_negociar').append($('<option>', {
+                    value: [i],
+                    text: [i]
+                }));
+            }
+        } else if (parcelas <= 500){
+            for (let i = 1; i <= 5; i++) {
+                $('#valor_negociar').append($('<option>', {
+                    value: [i],
+                    text: [i]
+                }));
+            }
+        } else{
+            for (let i = 1; i <= 6; i++) {
+                $('#valor_negociar').append($('<option>', {
+                    value: [i],
+                    text: [i]
+                }));
+            }
+        }
+    }
+
+    parcelas()
 </script>
