@@ -265,7 +265,8 @@ echo "</p>";
         })
         if($('#tabela_cliente').bootstrapTable('getData') == 0){
             return
-        } 
+        }
+        
         //se a tabela estiver vazia, o modal de negociar dividas nao vai abrir, o return faz um retorno vazio
         $('#tabela_cliente').bootstrapTable('refreshOptions', {
             classes: "table"
@@ -362,6 +363,7 @@ echo "</p>";
     }
 
     function calcula() {
+        
         let conta = $('#valorTotal_negociar').attr('data-valor-divida') * 0.1;
         
         if($('#mensagemAppend').length > 0 ){
@@ -370,9 +372,9 @@ echo "</p>";
             }
         } else{
             if (conta <= $('#valor_entrada').val()) {
-                console.log("tudo certo")
+                parcelas()
             } else {
-               $('#vd').append(`<p id='mensagemAppend'>Entrada de no mínimo 10%</p>`)
+               $('#vd').append(`<p style="color:red; font-weight: 600;" id='mensagemAppend'>Entrada de no mínimo 10%</p>`)
             }
         }
     }
@@ -380,6 +382,7 @@ echo "</p>";
     // ====================================
     // ---função da options das parcelas---
     // ====================================  
+
 
     function parcelas() {
         let parcelas = $('#valorTotal_negociar').attr('data-valor-divida') - $('#valor_entrada').val()
@@ -426,6 +429,4 @@ echo "</p>";
             }
         }
     }
-
-    parcelas()
 </script>
