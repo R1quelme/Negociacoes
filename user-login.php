@@ -7,7 +7,8 @@ if (is_logado()) {
     exit;
 }
 
-function formulario($msg, $nome = ""){
+function formulario($msg, $nome = "")
+{
     echo '<br><form action="user-login.php" method="post">
                 <div class="container">
                 <div class="corpo">
@@ -15,14 +16,14 @@ function formulario($msg, $nome = ""){
                         <div class="col-md-3 col-md-offset-0">
                             <div class="form-group">
                                 <label><b>Usuário</b></label>
-                                <input type="text" name="usuario" id="usuario" class="form-control" value="'. $nome .'">
+                                <input type="text" name="usuario" id="usuario" class="form-control" value="' . $nome . '">
                             </div>
                             <div class="form-group">
                                 <label><b>Senha</b></label>
                                 <input type="password" name="senha" id="senha" class="form-control">
                                 <a href="" data-toggle="modal" data-target="#criarCadastro">Criar novo cadastro</a>
                             </div>
-                            '. $msg .' 
+                            ' . $msg . ' 
                             <input type="submit" class="btn btn-success btn-block" value="Entrar">
                         </div>
                     </div>
@@ -43,46 +44,48 @@ function formulario($msg, $nome = ""){
 </head>
 
 <body><br>
-    <div class="col-md-11 offset-md-4">
-        <div id="corpo" class="container">
-            <?php
-            $nome = ($_POST['usuario']) ?? null;
-            $senha = $_POST['senha'] ?? null;
+    <div>
+        <div class="col-md-11 offset-md-4">
+            <div id="corpo" class="container">
+                <?php
+                $nome = ($_POST['usuario']) ?? null;
+                $senha = $_POST['senha'] ?? null;
 
-            // echo "<pre>";
-            // print_r($_POST);
+                // echo "<pre>";
+                // print_r($_POST);
 
-            if (is_null($nome) || is_null($senha)) {
-                formulario('');
-            } else {
-                $q = "SELECT id_cad, cpf, nome, senha, tipo_negocio, pessoa FROM cadastros WHERE nome = '$nome'";
-                $busca = $conexao->query($q);
-                if (!$busca) {
-                    echo "Falha ao acessar o banco";
+                if (is_null($nome) || is_null($senha)) {
+                    formulario('');
                 } else {
-                    if ($busca->num_rows > 0) {
-                        $registro = $busca->fetch_object();
-                        // echo "<pre>";
-                        // print_r($registro);
-                        // exit;
-                        if (testarHash($senha, $registro->senha)) {
-                            header("location: index.php");
-                            $_SESSION['nome_dividas'] = $registro->nome;
-                            $_SESSION['pessoa_dividas'] = $registro->pessoa;
-                            $_SESSION['id_cad_dividas'] = $registro->id_cad;
-                        } else {
-                            formulario(msg_erro('Senha Inválida'));
-                        }
+                    $q = "SELECT id_cad, cpf, nome, senha, tipo_negocio, pessoa FROM cadastros WHERE nome = '$nome'";
+                    $busca = $conexao->query($q);
+                    if (!$busca) {
+                        echo "Falha ao acessar o banco";
                     } else {
-                        echo "Falha ao buscar";
+                        if ($busca->num_rows > 0) {
+                            $registro = $busca->fetch_object();
+                            // echo "<pre>";
+                            // print_r($registro);
+                            // exit;
+                            if (testarHash($senha, $registro->senha)) {
+                                header("location: index.php");
+                                $_SESSION['nome_dividas'] = $registro->nome;
+                                $_SESSION['pessoa_dividas'] = $registro->pessoa;
+                                $_SESSION['id_cad_dividas'] = $registro->id_cad;
+                            } else {
+                                formulario(msg_erro('Senha Inválida'));
+                            }
+                        } else {
+                            echo "Falha ao buscar";
+                        }
                     }
                 }
-            }
-            //print_r($_SESSION);
-            ?>
+                //print_r($_SESSION);
+                ?>
+            </div>
         </div>
+        <?php require_once 'footer-white.html' ?>
     </div>
-
 
     <!-- Modal -->
     <div class="modal fade" id="criarCadastro" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -104,12 +107,12 @@ function formulario($msg, $nome = ""){
                                         <input type="text" name="nome_log" id="nome_log" class="form-control" placeholder="" required>
                                     </div>
                                     <div class="form-group">
-                                            <label for="pessoa">Pessoa</label>
-                                            <select name="pessoa" id="pessoa" class="form-control" required>
-                                                <option value="PF">PF</option>
-                                                <option value="PJ">PJ</option>
-                                            </select>
-                                        </div>
+                                        <label for="pessoa">Pessoa</label>
+                                        <select name="pessoa" id="pessoa" class="form-control" required>
+                                            <option value="PF">PF</option>
+                                            <option value="PJ">PJ</option>
+                                        </select>
+                                    </div>
                                     <div class="form-group">
                                         <label for="cpf">CPF ou CNPJ</label>
                                         <input type="text" name="cpf" id="cpf" class="form-control" placeholder="" required>
@@ -139,12 +142,6 @@ function formulario($msg, $nome = ""){
         </div>
     </div>
 
-    <br><br>
-    <hr>
-    <footer class="container">
-        <p>Matheus Riquelme &copy; 2020 Sistema Segunda Igreja Batista</p>
-    </footer>
-
 
     <script src="https://code.jquery.com/jquery-3.5.0.min.js" integrity="sha256-xNzN2a4ltkB44Mc/Jz3pT4iU1cmeR0FkXs4pru/JxaQ=" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
@@ -155,15 +152,15 @@ function formulario($msg, $nome = ""){
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.11/jquery.mask.min.js"></script>
 </body>
 
-    <script type="text/javascript">
-        // var tamanho = $("#cpf").val().length;
+<script type="text/javascript">
+    // var tamanho = $("#cpf").val().length;
 
-        // if(pessoa == 'PF'){
-        //    $("#cpf").mask("000.000.000-00");
-        // }
-        // if(pessoa == 'PJ'){
-        //     $("#cpf").mask("00.000.000/0000-00");
-        // } 
+    // if(pessoa == 'PF'){
+    //    $("#cpf").mask("000.000.000-00");
+    // }
+    // if(pessoa == 'PJ'){
+    //     $("#cpf").mask("00.000.000/0000-00");
+    // } 
 
 
 
@@ -171,18 +168,17 @@ function formulario($msg, $nome = ""){
     //     try {
     //         $("#cpf").unmask();
     //     } catch (e) {}
-    
+
     //     var tamanho = $("#cpf").val().length;
- 
+
     //     if(tamanho < 11){
     //         $("#cpf").mask("000.000.000-00");
     //     } else {
     //         $("#cpf").mask("99.999.999/9999-99");
     //     }                   
     // }); 
-    </script>
+</script>
 <script>
-
     function alertaMensagem(texto, sucesso = true) {
         if (sucesso) {
             tata.success(texto, '')

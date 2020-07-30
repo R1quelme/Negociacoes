@@ -23,7 +23,6 @@ echo "</p>";
     <meta charset="utf-8">
     <meta http -equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="css" rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.16.0/dist/bootstrap-table.min.css">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -69,21 +68,23 @@ echo "</p>";
 
             </table>
         </div>
+        <!-- <iframe src="./rodape.html"allowfullscreen style="height: 27%; width: 100%;"></iframe> --> 
+        <!-- para nao dar conflitos dos links fiz esse iframe para conseguir por o footer -->
     </div>
-
+    <?php require_once 'footer-white.html' ?>
+    
+    
     <script src="https://code.jquery.com/jquery-3.5.0.min.js" integrity="sha256-xNzN2a4ltkB44Mc/Jz3pT4iU1cmeR0FkXs4pru/JxaQ=" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
     <script src="https://unpkg.com/bootstrap-table@1.16.0/dist/bootstrap-table.min.js"></script>
     <script src="jQuery-Mask-Plugin-master/src/jquery.mask.js"></script>
     <script src="tata-master/dist/tata.js"></script>
-    <div class="container">
-        <br>
-        <hr>
-        <footer class="container">
-            <p>Matheus Riquelme &copy; 2020 Sistema Segunda Igreja Batista</p>
-        </footer>
-    </div>
+    
+
+    
+
+
     <?php
     if (is_admin()) {
     ?>
@@ -429,4 +430,5 @@ echo "</p>";
             }
         }
     }
+    
 </script>
