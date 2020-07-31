@@ -68,21 +68,21 @@ echo "</p>";
 
             </table>
         </div>
-        <!-- <iframe src="./rodape.html"allowfullscreen style="height: 27%; width: 100%;"></iframe> --> 
+        <!-- <iframe src="./rodape.html"allowfullscreen style="height: 27%; width: 100%;"></iframe> -->
         <!-- para nao dar conflitos dos links fiz esse iframe para conseguir por o footer -->
     </div>
     <?php require_once 'footer-white.html' ?>
-    
-    
+
+
     <script src="https://code.jquery.com/jquery-3.5.0.min.js" integrity="sha256-xNzN2a4ltkB44Mc/Jz3pT4iU1cmeR0FkXs4pru/JxaQ=" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
     <script src="https://unpkg.com/bootstrap-table@1.16.0/dist/bootstrap-table.min.js"></script>
     <script src="jQuery-Mask-Plugin-master/src/jquery.mask.js"></script>
     <script src="tata-master/dist/tata.js"></script>
-    
 
-    
+
+
 
 
     <?php
@@ -147,7 +147,7 @@ echo "</p>";
                         <div class="modal-body">
                             <div class="form_group">
                                 <label for="valorTotal_negociar">Valor total</label>
-                                <input type="text" name="valorTotal_negociar" data-valor-divida="" id="valorTotal_negociar" class="form-control" required />
+                                <input type="text" name="valorTotal_negociar" data-valor-divida="" id="valorTotal_negociar" class="form-control" readonly=“true” required />
                             </div><br>
                             <div class="form_group" id="vd">
                                 <label for="valor_entrada">Valor da entrada</label>
@@ -241,7 +241,7 @@ echo "</p>";
 
         for (let i = 0; i < arrayDivida.length; i++) {
             if (arrayDivida[i]['divida'] == true) {
-                if(arrayDivida[i]['status'] == 'Negociado'){
+                if (arrayDivida[i]['status'] == 'Negociado') {
                     continue
                 }
                 valor += parseInt(arrayDivida[i]['valor'])
@@ -256,6 +256,8 @@ echo "</p>";
                 })
             }
         }
+
+
         $('#valorTotal_negociar').attr('data-valor-divida', valor)
         $('#valorTotal_negociar').val(valor.toLocaleString('pt-BR', {
             minimumFractionDigits: 2
@@ -264,11 +266,20 @@ echo "</p>";
         $('#tabela_cliente').bootstrapTable({
             data: arrayParaTabelaDivida
         })
-        if($('#tabela_cliente').bootstrapTable('getData') == 0){
+        if ($('#tabela_cliente').bootstrapTable('getData') == 0) {
             return
         }
-        
         //se a tabela estiver vazia, o modal de negociar dividas nao vai abrir, o return faz um retorno vazio
+        $('#vd').attr('hidden', false)
+        let entrada = $('#valorTotal_negociar').attr('data-valor-divida') * 0.1
+
+        if (valor <= 100) {
+            avista()
+        } else {
+            $('#valor_entrada').val(entrada.toFixed(2))
+            parcelas()
+        }
+
         $('#tabela_cliente').bootstrapTable('refreshOptions', {
             classes: "table"
         })
@@ -363,19 +374,20 @@ echo "</p>";
         }
     }
 
+
     function calcula() {
-        
+
         let conta = $('#valorTotal_negociar').attr('data-valor-divida') * 0.1;
-        
-        if($('#mensagemAppend').length > 0 ){
-            if (conta <= $('#valor_entrada').val()){
+
+        if ($('#mensagemAppend').length > 0) {
+            if (conta <= $('#valor_entrada').val()) {
                 $('#mensagemAppend').remove()
             }
-        } else{
+        } else {
             if (conta <= $('#valor_entrada').val()) {
                 parcelas()
             } else {
-               $('#vd').append(`<p style="color:red; font-weight: 600;" id='mensagemAppend'>Entrada de no mínimo 10%</p>`)
+                $('#vd').append(`<p style="color:red; font-weight: 600;" id='mensagemAppend'>Entrada de no mínimo 10%</p>`)
             }
         }
     }
@@ -385,7 +397,11 @@ echo "</p>";
     // ====================================  
 
 
+
     function parcelas() {
+        if ($('#valor_negociar option').length > 0) {
+            $('#valor_negociar option').remove()
+        }
         let parcelas = $('#valorTotal_negociar').attr('data-valor-divida') - $('#valor_entrada').val()
 
         if (parcelas <= 100) {
@@ -400,28 +416,28 @@ echo "</p>";
                     text: [i]
                 }));
             }
-        } else if (parcelas <= 300){
+        } else if (parcelas <= 300) {
             for (let i = 1; i <= 3; i++) {
                 $('#valor_negociar').append($('<option>', {
                     value: [i],
                     text: [i]
                 }));
             }
-        } else if (parcelas <= 400){
+        } else if (parcelas <= 400) {
             for (let i = 1; i <= 4; i++) {
                 $('#valor_negociar').append($('<option>', {
                     value: [i],
                     text: [i]
                 }));
             }
-        } else if (parcelas <= 500){
+        } else if (parcelas <= 500) {
             for (let i = 1; i <= 5; i++) {
                 $('#valor_negociar').append($('<option>', {
                     value: [i],
                     text: [i]
                 }));
             }
-        } else{
+        } else {
             for (let i = 1; i <= 6; i++) {
                 $('#valor_negociar').append($('<option>', {
                     value: [i],
@@ -430,5 +446,16 @@ echo "</p>";
             }
         }
     }
-    
+
+    function avista() {
+        if ($('#valor_negociar option').length > 0) {
+            $('#valor_negociar option').remove()
+        }
+
+        $('#vd').attr('hidden', true)
+        $('#valor_negociar').append($('<option>', {
+            value: 1,
+            text: 'A vista'
+        }));
+    }
 </script>
