@@ -68,21 +68,21 @@
     color:purple;
 }
 
-#myFooter .fa-youtube:hover{
-    color:red;
+#myFooter .fa-github:hover{
+    color:black;
 }
 
-#myFooter .fa-youtube:focus{
-    color:red;
+#myFooter .fa-github:focus{
+    color:black;
 }
 
-#myFooter .fa-twitter:hover{
-    color: #00aced;
+#myFooter .fa-linkedin:hover{
+    color: #0077b5;
 
 }
 
-#myFooter .fa-twitter:focus{
-    color:#00aced;
+#myFooter .fa-linkedin:focus{
+    color:#0077b5;
 }
 
 

@@ -191,10 +191,16 @@ echo "</p>";
 
 </html>
 
+
 <script>
     $('#valorTotal_negociar').mask('000.000.000.000.000,00', {
         reverse: true
     });
+
+    $('#valor').mask('000.000.000.000.000,00', {
+        reverse: true
+    });
+
 
     // ====================================
     // -------------Mensagens--------------
@@ -257,11 +263,15 @@ echo "</p>";
             }
         }
 
-
         $('#valorTotal_negociar').attr('data-valor-divida', valor)
         $('#valorTotal_negociar').val(valor.toLocaleString('pt-BR', {
             minimumFractionDigits: 2
         }))
+
+        // $('#valor').val({
+        //     minimumFractionDigits: 2
+        // })
+
         $('#tabela_cliente').bootstrapTable('destroy')
         $('#tabela_cliente').bootstrapTable({
             data: arrayParaTabelaDivida
@@ -394,15 +404,16 @@ echo "</p>";
 
     // ====================================
     // ---função da options das parcelas---
-    // ====================================  
-
-
+    // ====================================
 
     function parcelas() {
         if ($('#valor_negociar option').length > 0) {
             $('#valor_negociar option').remove()
         }
         let parcelas = $('#valorTotal_negociar').attr('data-valor-divida') - $('#valor_entrada').val()
+        let resultado = parcelas / 100
+
+        math.ceil(resultado); 
 
         if (parcelas <= 100) {
             $('#valor_negociar').append($('<option>', {
@@ -440,7 +451,7 @@ echo "</p>";
         } else {
             for (let i = 1; i <= 6; i++) {
                 $('#valor_negociar').append($('<option>', {
-                    value: [i],
+                    value: [i], 
                     text: [i]
                 }));
             }
