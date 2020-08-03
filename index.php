@@ -207,10 +207,6 @@ body{
         reverse: true
     });
 
-    $('#valor').mask('000.000.000.000.000,00', {
-        reverse: true
-    });
-
 
     // ====================================
     // -------------Mensagens--------------
@@ -278,9 +274,6 @@ body{
             minimumFractionDigits: 2
         }))
 
-        // $('#valor').val({
-        //     minimumFractionDigits: 2
-        // })
 
         $('#tabela_cliente').bootstrapTable('destroy')
         $('#tabela_cliente').bootstrapTable({
@@ -296,7 +289,8 @@ body{
         if (valor <= 100) {
             avista()
         } else {
-            $('#valor_entrada').val(entrada.toFixed(2))
+            $('#valor_entrada').val(formataDinheiro(entrada))
+            //entrada.toFixed(2)
             parcelas()
         }
 
@@ -394,23 +388,37 @@ body{
         }
     }
 
+   
+    // ===========================================
+    // Calcula se o valor da entrada segue a regra
+    // ===========================================
 
     function calcula() {
 
         let conta = $('#valorTotal_negociar').attr('data-valor-divida') * 0.1;
 
         if ($('#mensagemAppend').length > 0) {
-            if (conta <= $('#valor_entrada').val()) {
+            if (conta <= retiraMascaraDinheiro($('#valor_entrada').val())) {
                 $('#mensagemAppend').remove()
             }
         } else {
-            if (conta <= $('#valor_entrada').val()) {
+            if (conta <= retiraMascaraDinheiro($('#valor_entrada').val())) {
                 parcelas()
             } else {
                 $('#vd').append(`<p style="color:red; font-weight: 600;" id='mensagemAppend'>Entrada de no mínimo 10%</p>`)
             }
         }
     }
+
+    //--------------formatar dinheiro--------------
+    function formataDinheiro(n) {
+        return n.toFixed(2).replace('.', ',').replace(/(\d)(?=(\d{3})+\,)/g, "$1.");
+    }
+
+    function retiraMascaraDinheiro(n) {
+        return n.replace('.', '').replace(',', '.');
+    }
+    //---------------------------------------------
 
     // ====================================
     // ---função da options das parcelas---
@@ -420,51 +428,18 @@ body{
         if ($('#valor_negociar option').length > 0) {
             $('#valor_negociar option').remove()
         }
-        let parcelas = $('#valorTotal_negociar').attr('data-valor-divida') - $('#valor_entrada').val()
+        let parcelas = $('#valorTotal_negociar').attr('data-valor-divida') - retiraMascaraDinheiro($('#valor_entrada').val())
         let resultado = parcelas / 100
 
-        // math.ceil(resultado); 
+        let arredondado = Math.ceil(resultado)
 
-        if (parcelas <= 100) {
-            $('#valor_negociar').append($('<option>', {
-                value: 1,
-                text: 'A vista'
-            }));
-        } else if (parcelas <= 200) {
-            for (let i = 1; i <= 2; i++) {
-                $('#valor_negociar').append($('<option>', {
-                    value: [i],
-                    text: [i]
-                }));
-            }
-        } else if (parcelas <= 300) {
-            for (let i = 1; i <= 3; i++) {
-                $('#valor_negociar').append($('<option>', {
-                    value: [i],
-                    text: [i]
-                }));
-            }
-        } else if (parcelas <= 400) {
-            for (let i = 1; i <= 4; i++) {
-                $('#valor_negociar').append($('<option>', {
-                    value: [i],
-                    text: [i]
-                }));
-            }
-        } else if (parcelas <= 500) {
-            for (let i = 1; i <= 5; i++) {
-                $('#valor_negociar').append($('<option>', {
-                    value: [i],
-                    text: [i]
-                }));
-            }
-        } else {
-            for (let i = 1; i <= 6; i++) {
-                $('#valor_negociar').append($('<option>', {
-                    value: [i], 
-                    text: [i]
-                }));
-            }
+        for(let i = 1; i <= arredondado; i++){
+            let valores = parcelas / i
+            $('#valor_negociar').append($('<option>',{
+                value: [i],
+                text: [i] + 'x de R$ ' + formataDinheiro(valores)
+                // (Math.round(valores * 100) / 100).toFixed(2)
+            }))
         }
     }
 
