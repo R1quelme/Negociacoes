@@ -28,6 +28,16 @@ echo "</p>";
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 
+<style>
+body{
+    margin: 0;
+    padding: 0;
+    font-family: sans-serif;
+    background: url(Fundo.png) no-repeat;
+    background-size: cover;
+}
+</style>
+
 <body id="body">
     <div class="table responsive">
         <div class="container">
@@ -249,7 +259,7 @@ echo "</p>";
             if (arrayDivida[i]['divida'] == true) {
                 if (arrayDivida[i]['status'] == 'Negociado') {
                     continue
-                }
+                } //Se o status for negociado vai passar pro próximo, ou seja, só vao aparecer os com status de pendente
                 valor += parseInt(arrayDivida[i]['valor'])
                 arrayParaTabelaDivida.push({
                     id_dividas: arrayDivida[i]['id_dividas'],
@@ -278,8 +288,8 @@ echo "</p>";
         })
         if ($('#tabela_cliente').bootstrapTable('getData') == 0) {
             return
-        }
-        //se a tabela estiver vazia, o modal de negociar dividas nao vai abrir, o return faz um retorno vazio
+        }//se a tabela estiver vazia, o modal de negociar dividas nao vai abrir, o return faz um retorno vazio
+        
         $('#vd').attr('hidden', false)
         let entrada = $('#valorTotal_negociar').attr('data-valor-divida') * 0.1
 
@@ -413,7 +423,7 @@ echo "</p>";
         let parcelas = $('#valorTotal_negociar').attr('data-valor-divida') - $('#valor_entrada').val()
         let resultado = parcelas / 100
 
-        math.ceil(resultado); 
+        // math.ceil(resultado); 
 
         if (parcelas <= 100) {
             $('#valor_negociar').append($('<option>', {
