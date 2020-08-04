@@ -66,7 +66,7 @@ echo "</p>";
                         <tr>
                             <th scope="col" data-field="id_dividas" data-visible="false"></th>
                             <th scope="col" data-field="divida" data-checkbox="true"></th>
-                            <th scope="col" data-field="nome">Nome</th>
+                            <!-- <th scope="col" data-field="nome">Nome</th> -->
                             <th scope="col" data-field="tipo_divida">Tipo de dividas</th>
                             <th scope="col" data-field="valor">Valor</th>
                             <th scope="col" data-field="status">Status</th>

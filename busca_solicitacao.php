@@ -50,23 +50,22 @@ echo json_encode($arraypararetorno);
 
     $resultadoDaBuscaSolicitacoes = $conexao->query($q);
 
-
     $arraypararetorno = [];
     
     while($registro = $resultadoDaBuscaSolicitacoes->fetch_object()){
+        $valor = $registro->valor;
         $array = [];
         $array['id_dividas'] = $registro->id_dividas;
-        $array['nome'] = $registro->nome; 
+        // $array['nome'] = $registro->nome; 
         $array['tipo_divida'] = $registro->tipo_divida;
-        $array['valor'] = $registro->valor;
+        $array['valor'] = number_format($valor,2,",",".");
         $array['status'] = $registro->status;
         // $array['acao'] = "<a class='btn btn-info' onclick='modalNegociar(" . $registro->id_cad . ")' style='color: #fff !important;'>Negociar</a>";
         // $array['gerar'] = "<a class='btn btn-danger' onclick='modalGerarDivida(" . $registro->id_cad . ")' style='color: #fff !important;'>Gerar</a>";
         // $array['acao'] = "<a class='btn btn-info' onclick='modalConsultarDivida(" . $registro->id_cad . ")' style='color: #fff !important;'>Consultar</a>";
         $arraypararetorno[] = $array;
-    }              
-                
-    
+    }                     
+
     echo json_encode($arraypararetorno);
 }
 
