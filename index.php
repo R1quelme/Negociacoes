@@ -29,13 +29,13 @@ echo "</p>";
 </head>
 
 <style>
-body{
-    margin: 0;
-    padding: 0;
-    font-family: sans-serif;
-    background: url(Fundo.png) no-repeat;
-    background-size: cover;
-}
+    body {
+        margin: 0;
+        padding: 0;
+        font-family: sans-serif;
+        background: url(Fundo.png) no-repeat;
+        background-size: cover;
+    }
 </style>
 
 <body id="body">
@@ -157,7 +157,7 @@ body{
                         <div class="modal-body">
                             <div class="form_group">
                                 <label for="valorTotal_negociar">Valor total</label>
-                                <input type="text" name="valorTotal_negociar" data-valor-divida="" id="valorTotal_negociar" class="form-control" readonly=“true” required />
+                                <input type="text" name="valorTotal_negociar" data-valor-divida="" id="valorTotal_negociar" class="form-control" readonly required />
                             </div><br>
                             <div class="form_group" id="vd">
                                 <label for="valor_entrada">Valor da entrada</label>
@@ -204,6 +204,10 @@ body{
 
 <script>
     $('#valorTotal_negociar').mask('000.000.000.000.000,00', {
+        reverse: true
+    });
+
+    $('#valor_entrada').mask('000.000.000.000.000,00', {
         reverse: true
     });
 
@@ -281,8 +285,8 @@ body{
         })
         if ($('#tabela_cliente').bootstrapTable('getData') == 0) {
             return
-        }//se a tabela estiver vazia, o modal de negociar dividas nao vai abrir, o return faz um retorno vazio
-        
+        } //se a tabela estiver vazia, o modal de negociar dividas nao vai abrir, o return faz um retorno vazio
+
         $('#vd').attr('hidden', false)
         let entrada = $('#valorTotal_negociar').attr('data-valor-divida') * 0.1
 
@@ -356,46 +360,42 @@ body{
             status.push(client.status)
         })
 
-        calcula();
+        calcula()
 
-        if (id_dividas != "") {
-            if (status == "Pendente") {
-                $.ajax({
-                    url: "ajax/negociarDivida.php",
-                    method: "POST",
-                    data: {
-                        id_dividas: id_dividas
-                    },
-                    success: function(dados) {
-                        dados = JSON.parse(dados)
-                        if (dados.status == "sucesso") {
-                            buscarSolicitacao()
-                            $('#dividas-gerar').modal('hide')
-                            alertaMensagem('Divida registrada com sucesso')
-                        } else {
-                            alertaMensagem('Erro ao registrar divida, favor contatar o suporte', false)
-                        }
-                    },
-                    error: function() {
+        if ($('#mensagemAppend').length > 0 == false) {
+            $.ajax({
+                url: "ajax/negociarDivida.php",
+                method: "POST",
+                data: {
+                    id_dividas: id_dividas
+                },
+                success: function(dados) {
+                    dados = JSON.parse(dados)
+                    if (dados.status == "sucesso") {
+                        buscarSolicitacao()
+                        $('#dividas-gerar').modal('hide')
+                        alertaMensagem('Divida registrada com sucesso')
+                    } else {
                         alertaMensagem('Erro ao registrar divida, favor contatar o suporte', false)
                     }
-                })
-            } else {
-                alertaMensagem('Divida já negociada', false);
-            }
+                },
+                error: function() {
+                    alertaMensagem('Erro ao registrar divida, favor contatar o suporte', false)
+                }
+            })
         } else {
-            alertaMensagem('Selecione alguma divida', false);
+            alertaMensagem('Entrada de no mínimo 10%', false);
         }
     }
 
-   
+
     // ===========================================
     // Calcula se o valor da entrada segue a regra
     // ===========================================
 
     function calcula() {
 
-        let conta = $('#valorTotal_negociar').attr('data-valor-divida') * 0.1;
+        const conta = (retiraMascaraDinheiro($('#valorTotal_negociar').val()) * 0.1).toFixed(2);
 
         if ($('#mensagemAppend').length > 0) {
             if (conta <= retiraMascaraDinheiro($('#valor_entrada').val())) {
@@ -428,14 +428,18 @@ body{
         if ($('#valor_negociar option').length > 0) {
             $('#valor_negociar option').remove()
         }
+        if (retiraMascaraDinheiro($('#valorTotal_negociar').val()) == retiraMascaraDinheiro($('#valor_entrada').val())) {
+            avista()
+            return
+        }
         let parcelas = $('#valorTotal_negociar').attr('data-valor-divida') - retiraMascaraDinheiro($('#valor_entrada').val())
         let resultado = parcelas / 100
 
         let arredondado = Math.ceil(resultado)
 
-        for(let i = 1; i <= arredondado; i++){
+        for (let i = 1; i <= arredondado; i++) {
             let valores = parcelas / i
-            $('#valor_negociar').append($('<option>',{
+            $('#valor_negociar').append($('<option>', {
                 value: [i],
                 text: [i] + 'x de R$ ' + formataDinheiro(valores)
                 // (Math.round(valores * 100) / 100).toFixed(2)
