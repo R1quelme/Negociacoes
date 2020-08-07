@@ -45,7 +45,7 @@ echo "</p>";
                 <?php
                 if (is_admin()) { ?>
                     <h2>Gerar dividas</h2>
-                    <p><button type="button" class="btn btn-danger" onclick="abriModalDividas()">
+                    <p><button type="button" class="btn btn-danger" onclick="abriModalGerarDividas()">
                             Gerar Divida
                         </button></p>
                     <thead>
@@ -59,7 +59,7 @@ echo "</p>";
                     </thead>
                 <?php } else { ?>
                     <h2>Dividas</h2>
-                    <p><button type="button" class="btn btn-danger" onclick="abriModalDividas()">
+                    <p><button type="button" class="btn btn-danger" onclick="abriModalNegociarDividas()">
                             Negociar dividas
                         </button></p>
                     <thead>
@@ -115,7 +115,8 @@ echo "</p>";
                             </div><br>
                             <div class="form_group">
                                 <label for="valor">Valor da divida</label>
-                                <input type="number" name="valor" id="valor" class="form-control" required>
+                                <select name="" id="efwv" data-select='true'></select>
+                                <input ontype="number" name="valor" id="valor" class="form-control" required>
                             </div>
                             <hr>
                             <h5>Clientes a receber dívida</h5>
@@ -199,6 +200,7 @@ echo "</p>";
 
 </body>
 
+
 </html>
 
 
@@ -208,6 +210,10 @@ echo "</p>";
     });
 
     $('#valor_entrada').mask('000.000.000.000.000,00', {
+        reverse: true
+    });
+
+    $('#valor').mask('000.000.000.000.000,00', {
         reverse: true
     });
 
@@ -247,10 +253,43 @@ echo "</p>";
     buscarSolicitacao()
 
     // ====================================
-    // ------------Abrir modal-------------
+    // ---------Abrir modal Gerar----------
     // ====================================
 
-    function abriModalDividas() {
+    function abriModalGerarDividas(){
+        let arrayDivida = $('#tabela_di vidas').bootstrapTable('getData')
+        let arrayParaTabelaDivida = [];
+
+        for (let i = 0; i < arrayDivida.length; i++) {
+            if (arrayDivida[i]['divida'] == true) {
+                arrayParaTabelaDivida.push({
+                    id: arrayDivida[i]['id_cad'],
+                    nome: arrayDivida[i]['nome'],
+                    cpf: arrayDivida[i]['cpf']
+                })
+            }
+        }
+
+        $('#tabela_cliente').bootstrapTable('destroy')
+        $('#tabela_cliente').bootstrapTable({
+            data: arrayParaTabelaDivida
+        })
+        if ($('#tabela_cliente').bootstrapTable('getData') == 0) {
+            return
+        } //se a tabela estiver vazia, o modal de negociar dividas nao vai abrir, o return faz um retorno vazio
+
+        $('#tabela_cliente').bootstrapTable('refreshOptions', {
+            classes: "table"
+        })
+
+        $('#dividas-gerar').modal('show')
+    }
+
+    // ====================================
+    // --------Abrir modal negociar--------
+    // ====================================
+
+    function abriModalNegociarDividas() {
         let arrayDivida = $('#tabela_dividas').bootstrapTable('getData')
         let arrayParaTabelaDivida = [];
         let valor = 0;
@@ -259,24 +298,20 @@ echo "</p>";
             if (arrayDivida[i]['divida'] == true) {
                 if (arrayDivida[i]['status'] == 'Negociado') {
                     continue
-                } //Se o status for negociado vai passar pro próximo, ou seja, só vao aparecer os com status de pendente
-                valor += parseInt(arrayDivida[i]['valor'])
+                }
+                //  Se o status for negociado vai passar pro próximo, ou seja, só vao aparecer os com status de pendente
+                valor += retiraMascaraDinheiro(arrayDivida[i]['valor'])
                 arrayParaTabelaDivida.push({
                     id_dividas: arrayDivida[i]['id_dividas'],
                     tipo_divida: arrayDivida[i]['tipo_divida'],
                     valor: arrayDivida[i]['valor'],
-                    status: arrayDivida[i]['status'],
-                    id: arrayDivida[i]['id_cad'],
-                    nome: arrayDivida[i]['nome'],
-                    cpf: arrayDivida[i]['cpf']
+                    status: arrayDivida[i]['status']
                 })
             }
         }
-
+        
         $('#valorTotal_negociar').attr('data-valor-divida', valor)
-        $('#valorTotal_negociar').val(valor.toLocaleString('pt-BR', {
-            minimumFractionDigits: 2
-        }))
+        $('#valorTotal_negociar').val(formataDinheiro(valor))
 
 
         $('#tabela_cliente').bootstrapTable('destroy')
@@ -398,11 +433,11 @@ echo "</p>";
         const conta = (retiraMascaraDinheiro($('#valorTotal_negociar').val()) * 0.1).toFixed(2);
 
         if ($('#mensagemAppend').length > 0) {
-            if (conta <= retiraMascaraDinheiro($('#valor_entrada').val())) {
+            if (conta <= retiraMascaraDinheiro($('#valor_entrada').val()).toFixed(2)) {
                 $('#mensagemAppend').remove()
             }
         } else {
-            if (conta <= retiraMascaraDinheiro($('#valor_entrada').val())) {
+            if (conta <= retiraMascaraDinheiro($('#valor_entrada').val()).toFixed(2)) {
                 parcelas()
             } else {
                 $('#vd').append(`<p style="color:red; font-weight: 600;" id='mensagemAppend'>Entrada de no mínimo 10%</p>`)
@@ -416,7 +451,7 @@ echo "</p>";
     }
 
     function retiraMascaraDinheiro(n) {
-        return n.replace('.', '').replace(',', '.');
+        return Number(n.replace('.', '').replace(',', '.'));
     }
     //---------------------------------------------
 
