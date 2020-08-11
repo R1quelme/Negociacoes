@@ -7,7 +7,8 @@ if (is_logado()) {
     exit;
 }
 
-function formulario($msg, $nome = ""){
+function formulario($msg, $nome = "")
+{
     echo '<br><form action="user-login.php" method="post">
                 <div class="container">
                 <div class="corpo">
@@ -15,14 +16,14 @@ function formulario($msg, $nome = ""){
                         <div class="col-md-3 col-md-offset-0">
                             <div class="form-group">
                                 <label><b>Usuário</b></label>
-                                <input type="text" name="usuario" id="usuario" class="form-control" value="'. $nome .'">
+                                <input type="text" name="usuario" id="usuario" class="form-control" value="' . $nome . '">
                             </div>
                             <div class="form-group">
                                 <label><b>Senha</b></label>
                                 <input type="password" name="senha" id="senha" class="form-control">
                                 <a href="" data-toggle="modal" data-target="#criarCadastro">Criar novo cadastro</a>
                             </div>
-                            '. $msg .' 
+                            ' . $msg . ' 
                             <input type="submit" class="btn btn-success btn-block" value="Entrar">
                         </div>
                     </div>
@@ -95,7 +96,7 @@ function formulario($msg, $nome = ""){
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form id="form_ke" onsubmit="return salvarCadastro(event)">
+                    <form id="form_cadastro" onsubmit="return salvarCadastro(event)">
                         <div class="modal-body">
                             <div class="row">
                                 <div class="col-12">
@@ -104,15 +105,15 @@ function formulario($msg, $nome = ""){
                                         <input type="text" name="nome_log" id="nome_log" class="form-control" placeholder="" required>
                                     </div>
                                     <div class="form-group">
-                                            <label for="pessoa">Pessoa</label>
-                                            <select name="pessoa" id="pessoa" class="form-control" required>
-                                                <option value="PF">PF</option>
-                                                <option value="PJ">PJ</option>
-                                            </select>
-                                        </div>
+                                        <label for="pessoa">Pessoa</label>
+                                        <select name="pessoa" id="pessoa" class="form-control" required>
+                                            <option value="PF">PF</option>
+                                            <option value="PJ">PJ</option>
+                                        </select>
+                                    </div>
                                     <div class="form-group">
                                         <label for="cpf">CPF ou CNPJ</label>
-                                        <input type="text" name="cpf" id="cpf" class="form-control" placeholder="" required>
+                                        <input ontype="number" name="cpf" id="cpf" class="form-control" placeholder="" required>
                                     </div>
                                     <div class="form-group">
                                         <label for="tipo_negocio">Tipo de negocio</label>
@@ -155,34 +156,34 @@ function formulario($msg, $nome = ""){
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.11/jquery.mask.min.js"></script>
 </body>
 
-    <script type="text/javascript">
-        // var tamanho = $("#cpf").val().length;
-
-        // if(pessoa == 'PF'){
-        //    $("#cpf").mask("000.000.000-00");
-        // }
-        // if(pessoa == 'PJ'){
-        //     $("#cpf").mask("00.000.000/0000-00");
-        // } 
-
+<script type="text/javascript">
+    if ($('#pessoa').val() == "PF") {
+        $("#cpf").mask("000.000.000-00", {
+            reverse: true
+        })
+    } else if($('#pessoa').val() == "PJ"){
+        $("#cpf").mask("00.000.000/0000-00", {
+            reverse: true
+        })
+    }
 
 
     //     $("#cpf").keydown(function(){
     //     try {
     //         $("#cpf").unmask();
     //     } catch (e) {}
-    
+
     //     var tamanho = $("#cpf").val().length;
- 
+
     //     if(tamanho < 11){
     //         $("#cpf").mask("000.000.000-00");
     //     } else {
     //         $("#cpf").mask("99.999.999/9999-99");
     //     }                   
     // }); 
-    </script>
-<script>
+</script>
 
+<script>
     function alertaMensagem(texto, sucesso = true) {
         if (sucesso) {
             tata.success(texto, '')
