@@ -41,19 +41,19 @@ echo "</p>";
 <body id="body">
     <div class="table responsive">
         <div class="container">
-            <table id="tabela_dividas"><br>
-                <?php
-                if (is_admin()) { ?>
-                    <h2>Gerar dividas</h2>
-                    <p><button type="button" class="btn btn-danger" onclick="abriModalGerarDividas()">
-                            Gerar Divida
-                        </button></p>
+            <?php
+            if (is_admin()) { ?>
+                <h2>Gerar dividas</h2>
+                <p><button type="button" class="btn btn-danger" onclick="abriModalGerarDividas()">
+                        Gerar Divida
+                    </button></p>
+                <table id="tabela_dividas"><br>
                     <thead>
                         <tr>
                             <th scope="col" data-field="id_cad" data-visible="false"></th>
                             <th scope="col" data-field="divida" data-checkbox="true"></th>
                             <th scope="col" data-field="nome">Nome</th>
-                            <th scope="col" data-field="cpf">CPF ou CNPJ</th>
+                            <th scope="col" data-field="cpf">CPF</th>
                             <th scope="col" data-field="tipo_negocio">tipo de negocio</th>
                         </tr>
                     </thead>
@@ -62,21 +62,36 @@ echo "</p>";
                     <p><button type="button" class="btn btn-danger" onclick="abriModalNegociarDividas()">
                             Negociar dividas
                         </button></p>
-                    <thead>
-                        <tr>
-                            <th scope="col" data-field="id_dividas" data-visible="false"></th>
+                    <table id="tabela_dividas" data-detail-view="true"><br>
+                        <thead>
+                            <tr>
+                                <!-- <th scope="col" data-field="id_dividas" data-visible="false"></th>
                             <th scope="col" data-field="divida" data-checkbox="true"></th>
-                            <!-- <th scope="col" data-field="nome">Nome</th> -->
+                            <th scope="col" data-field="nome">Nome</th>
                             <th scope="col" data-field="tipo_divida">Tipo de dividas</th>
                             <th scope="col" data-field="valor">Valor</th>
-                            <th scope="col" data-field="status">Status</th>
+                            <th scope="col" data-field="status">Status</th> -->
+                                <th scope="col" data-field="id_emissor" data-visible="false"></th>
+                                <th scope="col" data-field="nome">Nome</th>
+                                <th scope="col" data-field="cpf">CNPJ</th>
+                                <th scope="col" data-field="tipo_negocio">Tipo de negocio</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        <tr class="show">
+                            <td scope="col" data-field="id_dividas" data-visible="false"></td>
+                            <td scope="col" data-field="divida" data-checkbox="true"></td>
+                            <td scope="col" data-field="nome">Nome</td>
+                            <td scope="col" data-field="tipo_divida">Tipo de dividas</td>
+                            <td scope="col" data-field="valor">Valor</td>
+                            <td scope="col" data-field="status">Status</td>
                         </tr>
-                    </thead>
-                <?php
+                        </tbody>
+                    <?php
                 }
-                ?>
+                    ?>
 
-            </table>
+                    </table>
         </div>
         <!-- <iframe src="./rodape.html"allowfullscreen style="height: 27%; width: 100%;"></iframe> -->
         <!-- para nao dar conflitos dos links fiz esse iframe para conseguir por o footer -->
@@ -115,7 +130,6 @@ echo "</p>";
                             </div><br>
                             <div class="form_group">
                                 <label for="valor">Valor da divida</label>
-                                <select name="" id="efwv" data-select='true'></select>
                                 <input ontype="number" name="valor" id="valor" class="form-control" required>
                             </div>
                             <hr>
@@ -237,18 +251,41 @@ echo "</p>";
     function buscarSolicitacao() {
         $.ajax({
             url: "busca_solicitacao.php",
+            data:{
+                tipo: 'busca_solicitacao'
+            },  
             success: function(result) {
 
                 $('#tabela_dividas').bootstrapTable('destroy')
                 $('#tabela_dividas').bootstrapTable({
-                    data: JSON.parse(result)
+                    data: JSON.parse(result),
+                    onExpandRow: function(index, row, $detail) {
+                        console.log(row.id_emissor)
+                        dividasEmitidasEmissor(row.id_emissor)
+                    }
                 })
-                $('#tabela_dividas').bootstrapTable('refreshOptions', {
+                $('#tabela_dividas').bootstrapTable('refreshOptions', { 
                     classes: "table"
                 })
             }
         })
     }
+
+    function dividasEmitidasEmissor(id_emissor){
+        $.ajax({
+            url: "busca_solicitacao.php",
+            method:"GET",
+            data:{
+                id_emissor: id_emissor,
+                tipo: 'dividas_emissor'
+            },
+            sucess: function(result){
+                console.log("sucesso")
+            }
+        })
+    }
+
+
 
     buscarSolicitacao()
 
@@ -256,8 +293,8 @@ echo "</p>";
     // ---------Abrir modal Gerar----------
     // ====================================
 
-    function abriModalGerarDividas(){
-        let arrayDivida = $('#tabela_di vidas').bootstrapTable('getData')
+    function abriModalGerarDividas() {
+        let arrayDivida = $('#tabela_dividas').bootstrapTable('getData')
         let arrayParaTabelaDivida = [];
 
         for (let i = 0; i < arrayDivida.length; i++) {
@@ -309,7 +346,7 @@ echo "</p>";
                 })
             }
         }
-        
+
         $('#valorTotal_negociar').attr('data-valor-divida', valor)
         $('#valorTotal_negociar').val(formataDinheiro(valor))
 
@@ -358,7 +395,7 @@ echo "</p>";
                 data: {
                     id_cad: id_cad,
                     tipo_divida: $("#tipo_divida").val(),
-                    valor: $("#valor").val(),
+                    valor: retiraMascaraDinheiro($("#valor").val()),
                 },
                 success: function(dados) {
                     dados = JSON.parse(dados)
