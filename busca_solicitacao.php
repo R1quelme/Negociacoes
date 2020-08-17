@@ -46,12 +46,12 @@ FROM
 	JOIN
     cadastros AS c ON c.id_cad = d.id_cad
 WHERE 
-    c.id_cad = " . $_SESSION['id_cad_dividas'] ." and d.id_emissor = " . $_GET['id_emissor'];
+    c.id_cad = {$_SESSION['id_cad_dividas']} and d.id_emissor = {$_GET['id_emissor']}";
     
     $resultadoBuscaDividas = $conexao->query($q);
     
     $arraypararetorno = [];
-while($registro = $resultadoDaBuscaDividas->fetch_object()){
+while($registro = $resultadoBuscaDividas->fetch_object()){
     $valor = $registro->valor;
     $array = [];
     $array['id_dividas'] = $registro->id_dividas;

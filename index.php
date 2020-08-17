@@ -57,41 +57,33 @@ echo "</p>";
                             <th scope="col" data-field="tipo_negocio">tipo de negocio</th>
                         </tr>
                     </thead>
-                <?php } else { ?>
-                    <h2>Dividas</h2>
-                    <p><button type="button" class="btn btn-danger" onclick="abriModalNegociarDividas()">
-                            Negociar dividas
-                        </button></p>
-                    <table id="tabela_dividas" data-detail-view="true"><br>
-                        <thead>
-                            <tr>
-                                <!-- <th scope="col" data-field="id_dividas" data-visible="false"></th>
-                            <th scope="col" data-field="divida" data-checkbox="true"></th>
-                            <th scope="col" data-field="nome">Nome</th>
-                            <th scope="col" data-field="tipo_divida">Tipo de dividas</th>
-                            <th scope="col" data-field="valor">Valor</th>
-                            <th scope="col" data-field="status">Status</th> -->
-                                <th scope="col" data-field="id_emissor" data-visible="false"></th>
+                </table>
+            <?php } else { ?>
+                <h2>Dividas</h2>
+                <p><button type="button" class="btn btn-danger" onclick="abriModalNegociarDividas()">
+                        Negociar dividas
+                    </button></p>
+                <table id="tabela_dividas" data-detail-view="true"><br>
+                    <thead>
+                        <tr>
+                            <!-- <th scope="col" data-field="id_dividas" data-visible="false"></th>
+                                <th scope="col" data-field="divida" data-checkbox="true"></th>
                                 <th scope="col" data-field="nome">Nome</th>
-                                <th scope="col" data-field="cpf">CNPJ</th>
-                                <th scope="col" data-field="tipo_negocio">Tipo de negocio</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                        <tr class="show">
-                            <td scope="col" data-field="id_dividas" data-visible="false"></td>
-                            <td scope="col" data-field="divida" data-checkbox="true"></td>
-                            <td scope="col" data-field="nome">Nome</td>
-                            <td scope="col" data-field="tipo_divida">Tipo de dividas</td>
-                            <td scope="col" data-field="valor">Valor</td>
-                            <td scope="col" data-field="status">Status</td>
+                                <th scope="col" data-field="tipo_divida">Tipo de dividas</th>
+                                <th scope="col" data-field="valor">Valor</th>
+                                <th scope="col" data-field="status">Status</th> -->
+                            <th scope="col" data-field="id_emissor" data-visible="false"></th>
+                            <th scope="col" data-field="nome">Nome</th>
+                            <th scope="col" data-field="cpf">CNPJ</th>
+                            <th scope="col" data-field="tipo_negocio">Tipo de negocio</th>
                         </tr>
-                        </tbody>
-                    <?php
-                }
-                    ?>
+                    </thead>
+                </table>
 
-                    </table>
+            <?php
+            }
+            ?>
+
         </div>
         <!-- <iframe src="./rodape.html"allowfullscreen style="height: 27%; width: 100%;"></iframe> -->
         <!-- para nao dar conflitos dos links fiz esse iframe para conseguir por o footer -->
@@ -139,7 +131,7 @@ echo "</p>";
                                     <table id="tabela_cliente">
                                         <thead>
                                             <tr>
-                                                <th scope="col" data-field="id">Id</th>
+                                                <th scope="col" data-field="id">#</th>
                                                 <th scope="col" data-field="nome">Nome</th>
                                                 <th scope="col" data-field="cpf">CPF</th>
                                             </tr>
@@ -231,7 +223,6 @@ echo "</p>";
         reverse: true
     });
 
-
     // ====================================
     // -------------Mensagens--------------
     // ====================================
@@ -251,38 +242,80 @@ echo "</p>";
     function buscarSolicitacao() {
         $.ajax({
             url: "busca_solicitacao.php",
-            data:{
+            data: {
                 tipo: 'busca_solicitacao'
-            },  
+            },
             success: function(result) {
 
                 $('#tabela_dividas').bootstrapTable('destroy')
                 $('#tabela_dividas').bootstrapTable({
                     data: JSON.parse(result),
                     onExpandRow: function(index, row, $detail) {
-                        console.log(row.id_emissor)
-                        dividasEmitidasEmissor(row.id_emissor)
+                        console.log({
+                            index,
+                            row,
+                            $detail
+                        })
+
+                        dividasEmitidasEmissor(row.id_emissor, $detail)
                     }
                 })
-                $('#tabela_dividas').bootstrapTable('refreshOptions', { 
+                $('#tabela_dividas').bootstrapTable('refreshOptions', {
                     classes: "table"
                 })
             }
         })
     }
 
-    function dividasEmitidasEmissor(id_emissor){
+    function dividasEmitidasEmissor(id_emissor, subtable) {
         $.ajax({
             url: "busca_solicitacao.php",
-            method:"GET",
-            data:{
+            method: "GET",
+            data: {
                 id_emissor: id_emissor,
                 tipo: 'dividas_emissor'
             },
-            sucess: function(result){
+            sucess: function(result) {
                 console.log("sucesso")
+                criarTabela(subtable)
             }
         })
+    }
+
+    function criaTabela(table) {
+        table = table.html('<table></table>').find('table')
+        // $('#tabela_dividas tr.detail-view').html('<table></table>').find('table')
+        function buildTable($el) {
+            var i;
+            var j;
+            var row
+            var columns = []
+            var data = []
+
+            for (i = 0; i < cells; i++) {
+                columns.push({
+                    field: 'field',
+                    title: 'Cell',
+                    sortable: true
+                })
+            }
+            for (i = 0; i < rows; i++) {
+                row = {}
+                for (j = 0; j < cells; j++) {
+                    row['field' + j] = 'Row-' + i + '-' + j
+                }
+                data.push(row)
+            }
+            $el.bootstrapTable({
+                columns: columns,
+                data: data,
+                detailView: cells > 1,
+                onExpandRow: function(index, row, $detail) {
+                    /* eslint no-use-before-define: ["error", { "functions": false }]*/
+                    expandTable($detail, cells - 1)
+                }
+            })
+        }
     }
 
 
