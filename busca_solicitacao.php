@@ -2,11 +2,6 @@
 require_once 'conexoes/conexao.php';
 require_once 'conexoes/login.php';
 
-//     if(!is_admin()){
-//         $q .= " WHERE id_cad = " . $_SESSION['id_cad_dividas'];
-//     } elseif(is_admin()){
-//         $q .= " WHERE pessoa = 'PF'";
-//     }
 
 if (is_admin()) {
     $q = "SELECT 
@@ -26,8 +21,6 @@ WHERE
         $array['cpf'] = $registro->cpf;
         $array['nome'] = $registro->nome;
         $array['tipo_negocio'] = $registro->tipo_negocio;
-        // $array['gerar'] = "<a class='btn btn-danger' onclick='modalGerarDivida(" . $registro->id_cad . ")' style='color: #fff !important;'>Gerar</a>";
-        // $array['acao'] = "<a class='btn btn-info' onclick='modalConsultarDivida(" . $registro->id_cad . ")' style='color: #fff !important;'>Consultar</a>";
         $arraypararetorno[] = $array;
     }
 
@@ -59,10 +52,7 @@ while($registro = $resultadoBuscaDividas->fetch_object()){
     $array['tipo_divida'] = $registro->tipo_divida;
     $array['valor'] = number_format($valor,2,",",".");
     $array['status'] = $registro->status;
-    // $array['gerada'] = $registro->;
-    // $array['acao'] = "<a class='btn btn-info' onclick='modalNegociar(" . $registro->id_cad . ")' style='color: #fff !important;'>Negociar</a>";
-    // $array['gerar'] = "<a class='btn btn-danger' onclick='modalGerarDivida(" . $registro->id_cad . ")' style='color: #fff !important;'>Gerar</a>";
-    // $array['acao'] = "<a class='btn btn-info' onclick='modalConsultarDivida(" . $registro->id_cad . ")' style='color: #fff !important;'>Consultar</a>";
+
     $arraypararetorno[] = $array;
 }                     
 

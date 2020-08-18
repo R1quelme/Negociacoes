@@ -3,6 +3,7 @@ require_once '../conexoes/conexao.php';
 require_once '../conexoes/login.php';
 
 $id_cad = $_POST['id_cad'];
+$id_emissor = $_SESSION['id_cad_dividas'];
 $tipo_divida = $_POST['tipo_divida'];
 $valor = $_POST['valor'];
 
@@ -15,9 +16,9 @@ $message = [];
 for ($i = 0; $i < count($id_cad); $i++) {
     $q = "INSERT 
         INTO `dividas`.`divida`
-            (`id_cad`, `tipo_divida`, `valor`)
+            (`id_cad`, `id_emissor`, `tipo_divida`, `valor`)
         VALUES 
-            ('$id_cad[$i]', '$tipo_divida', '$valor');
+            ('$id_cad[$i]', '$id_emissor', '$tipo_divida', '$valor');
     ";
     $res = mysqli_query($conexao, $q);
 

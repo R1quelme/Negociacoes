@@ -4,6 +4,7 @@ require_once '../conexoes/login.php';
 
 $nome = $_POST['nome'];
 $cpf= $_POST['cpf'];
+$pessoa = $_POST['pessoa'];
 $tipo_negocio= $_POST['tipo_negocio'];
 $senha = $_POST['senha'];
 
@@ -23,9 +24,9 @@ if($q = "SELECT id_cad FROM cadastros WHERE nome = '$nome'"){
             $q = "INSERT 
             INTO 
             `dividas`.`cadastros`
-                (`nome`, `cpf`, `tipo_negocio`, `senha`)
+                (`nome`, `cpf`, `Pessoa`, `tipo_negocio`, `senha`)
             VALUES 
-                ('$nome', '$cpf', '$tipo_negocio', '$hash');
+                ('$nome', '$cpf', '$pessoa', '$tipo_negocio', '$hash');
             ";
         }
     }

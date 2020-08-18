@@ -106,7 +106,7 @@ function formulario($msg, $nome = "")
                                     </div>
                                     <div class="form-group">
                                         <label for="pessoa">Pessoa</label>
-                                        <select name="pessoa" id="pessoa" class="form-control" required>
+                                        <select name="pessoa" id="pessoa" class="form-control" onchange= "mascara()" required>
                                             <option value="PF">PF</option>
                                             <option value="PJ">PJ</option>
                                         </select>
@@ -152,21 +152,23 @@ function formulario($msg, $nome = "")
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
     <script src="https://unpkg.com/bootstrap-table@1.16.0/dist/bootstrap-table.min.js"></script>
     <script src="tata-master/dist/tata.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"> </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.11/jquery.mask.min.js"></script>
 </body>
 
 <script type="text/javascript">
-    if ($('#pessoa').val() == "PF") {
-        $("#cpf").mask("000.000.000-00", {
-            reverse: true
-        })
-    } else if($('#pessoa').val() == "PJ"){
-        $("#cpf").mask("00.000.000/0000-00", {
-            reverse: true
-        })
+    
+    function mascara() {
+        if ($('#pessoa').val() === "PJ") {
+            $("#cpf").mask("00.000.000/0000-00", {
+                reverse: true
+            })
+        } else if ($('#pessoa').val() === "PF") {
+            $("#cpf").mask("000.000.000-00", {
+                reverse: true
+            })
+        }
     }
-
+    mascara()
 
     //     $("#cpf").keydown(function(){
     //     try {
@@ -200,9 +202,10 @@ function formulario($msg, $nome = "")
                 method: "POST",
                 data: {
                     nome: $("#nome_log").val(),
+                    pessoa: $("#pessoa").val(),
                     cpf: $("#cpf").val(),
                     tipo_negocio: $("#tipo_negocio").val(),
-                    senha: $("#senha_log").val(),
+                    senha: $("#senha_log").val()
                 },
                 success: function(dados) {
                     dados = JSON.parse(dados)
@@ -215,7 +218,7 @@ function formulario($msg, $nome = "")
                     }
                 },
                 error: function() {
-                    alertaMensagem('Erro ao cadastrar, favor contatar o suporte', false)
+                    alertaMensagem('Erro ao cadastrar, favor contatar o suporte aha', false)
                 }
 
             })

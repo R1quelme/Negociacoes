@@ -66,12 +66,6 @@ echo "</p>";
                 <table id="tabela_dividas" data-detail-view="true"><br>
                     <thead>
                         <tr>
-                            <!-- <th scope="col" data-field="id_dividas" data-visible="false"></th>
-                                <th scope="col" data-field="divida" data-checkbox="true"></th>
-                                <th scope="col" data-field="nome">Nome</th>
-                                <th scope="col" data-field="tipo_divida">Tipo de dividas</th>
-                                <th scope="col" data-field="valor">Valor</th>
-                                <th scope="col" data-field="status">Status</th> -->
                             <th scope="col" data-field="id_emissor" data-visible="false"></th>
                             <th scope="col" data-field="nome">Nome</th>
                             <th scope="col" data-field="cpf">CNPJ</th>
@@ -251,12 +245,11 @@ echo "</p>";
                 $('#tabela_dividas').bootstrapTable({
                     data: JSON.parse(result),
                     onExpandRow: function(index, row, $detail) {
-                        console.log({
-                            index,
-                            row,
-                            $detail
-                        })
-
+                        // console.log({
+                        //     index,
+                        //     row,
+                        //     $detail
+                        // })
                         dividasEmitidasEmissor(row.id_emissor, $detail)
                     }
                 })
@@ -275,48 +268,37 @@ echo "</p>";
                 id_emissor: id_emissor,
                 tipo: 'dividas_emissor'
             },
-            sucess: function(result) {
-                console.log("sucesso")
-                criarTabela(subtable)
+            success: function(result) {
+                // console.log("sucesso")
+                criaTabela(subtable, JSON.parse(result))
             }
         })
     }
 
-    function criaTabela(table) {
-        table = table.html('<table></table>').find('table')
+    function criaTabela(table, dadostable) {
+        // console.log(table)
+        table = table.html(`
+        <table id="tabela_clientes">
+            <thead>
+                <tr>
+                    <th scope="col" data-field="id_dividas" data-visible="false"></th>
+                    <th scope="col" data-field="divida" data-checkbox="true"></th>
+                    <th scope="col" data-field="tipo_divida">Tipo de dividas</th>
+                    <th scope="col" data-field="valor">Valor</th>
+                    <th scope="col" data-field="status">Status</th>
+                </tr>
+            </thead>
+        </table>
+        `).find('table')
         // $('#tabela_dividas tr.detail-view').html('<table></table>').find('table')
-        function buildTable($el) {
-            var i;
-            var j;
-            var row
-            var columns = []
-            var data = []
-
-            for (i = 0; i < cells; i++) {
-                columns.push({
-                    field: 'field',
-                    title: 'Cell',
-                    sortable: true
-                })
-            }
-            for (i = 0; i < rows; i++) {
-                row = {}
-                for (j = 0; j < cells; j++) {
-                    row['field' + j] = 'Row-' + i + '-' + j
-                }
-                data.push(row)
-            }
-            $el.bootstrapTable({
-                columns: columns,
-                data: data,
-                detailView: cells > 1,
-                onExpandRow: function(index, row, $detail) {
-                    /* eslint no-use-before-define: ["error", { "functions": false }]*/
-                    expandTable($detail, cells - 1)
-                }
-            })
-        }
+        table.bootstrapTable({
+            data: dadostable
+        })
+        $('#tabela_clientes').bootstrapTable('refreshOptions', {
+            classes: "table"
+        })
     }
+
 
 
 
@@ -420,6 +402,7 @@ echo "</p>";
         $('#tabela_cliente').bootstrapTable('getData').forEach(cliente => {
             id_cad.push(cliente.id)
         })
+    
 
         if (id_cad != "") {
             $.ajax({
