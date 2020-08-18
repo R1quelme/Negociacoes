@@ -108,7 +108,7 @@ function formulario($msg, $nome = "")
                                         <label for="pessoa">Pessoa</label>
                                         <select name="pessoa" id="pessoa" class="form-control" onchange= "mascara()" required>
                                             <option value="PF">PF</option>
-                                            <option value="PJ">PJ</option>
+                                            <option value="PJ">PJ</option>   
                                         </select>
                                     </div>
                                     <div class="form-group">
