@@ -54,7 +54,7 @@ echo "</p>";
                             <th scope="col" data-field="divida" data-checkbox="true"></th>
                             <th scope="col" data-field="nome">Nome</th>
                             <th scope="col" data-field="cpf">CPF</th>
-                            <th scope="col" data-field="tipo_negocio">tipo de negocio</th>
+                            <th scope="col" data-field="tipo_negocio">Tipo de negocio</th>
                         </tr>
                     </thead>
                 </table>
@@ -117,7 +117,48 @@ echo "</p>";
                             <div class="form_group">
                                 <label for="valor">Valor da divida</label>
                                 <input ontype="number" name="valor" id="valor" class="form-control" required>
+                            </div><br>
+                            <div class="form-group">
+                                <label for="juros">Vai ter Juros? </label>
+                                <select name="juros" id="juros" class="form-control" required>
+                                    <option value="">Selecione uma resposta</option>
+                                    <option value="sim">Sim</option>
+                                    <option value="nao">Não</option>
+                                </select>
                             </div>
+                            <div class="form_group">
+                                <label for="tipo_juros">Tipo dos juros: </label>
+                                <select name="tipo_juros" id="tipo_juros" class="form-control">
+                                    <option value="">Selecione uma resposta</option>
+                                    <option value="val">Valor</option>
+                                    <option value="porc">Porcentagem</option>
+                                </select>
+                            </div><br>
+                            <div class="form_group">
+                                <label for="valorJuros">Porcentagem dos juros: </label>
+                                <input ontype="number" name="valorJuros" id="valorJuros" class="form-control">
+                            </div><br>
+                            <div class="form-group">
+                                <label for="cobranca">Juros vai ser: </label>
+                                <select name="cobranca" id="cobranca" class="form-control">
+                                    <option value="">Selecione uma resposta</option>
+                                    <option value="">Nao vai ter</option>
+                                    <option value="D">Diario</option>
+                                    <option value="M">Mensal</option>
+                                    <option value="A">Anual</option>
+                                </select>
+                            </div>
+                            <div class="form_group">
+                                <label for="valorMulta">Valor da multa: </label>
+                                <input ontype="number" name="valorMulta" id="valorMulta" class="form-control">
+                            </div><br>
+                            <div class="form_group">
+                                <label for="vencimento">Vencimento: </label>
+                                <input type="date" name="vencimento" id="vencimento" class="form-control" required>
+                            </div>
+
+                            
+
                             <hr>
                             <h5>Clientes a receber dívida</h5>
                             <div class="table responsive">
@@ -167,9 +208,7 @@ echo "</p>";
                             <br>
                             <div class="form_group">
                                 <label for="valor_negociar">Numero de parcelas</label>
-                                <select type="number" name="valor_negociar" id="valor_negociar" class="form-control">
-
-                                </select>
+                                <select type="number" name="valor_negociar" id="valor_negociar" class="form-control"></select>
                             </div>
                             <hr>
                             <h5>Dividas a serem negociadas</h5>
@@ -216,6 +255,14 @@ echo "</p>";
     $('#valor').mask('000.000.000.000.000,00', {
         reverse: true
     });
+    
+    $('#valorMulta').mask('000.000.000.000.000,00', {
+        reverse: true
+    });
+
+    // $("#valorJuros").mask("00%");
+
+
 
     // ====================================
     // -------------Mensagens--------------
@@ -274,17 +321,23 @@ echo "</p>";
             }
         })
     }
+    var indice_table = 0;
 
     function criaTabela(table, dadostable) {
         // console.log(table)
         table = table.html(`
-        <table id="tabela_clientes">
+        <table class="tabela_clientes" id='table_${indice_table}'>
             <thead>
                 <tr>
                     <th scope="col" data-field="id_dividas" data-visible="false"></th>
                     <th scope="col" data-field="divida" data-checkbox="true"></th>
                     <th scope="col" data-field="tipo_divida">Tipo de dividas</th>
+                    <th scope="col" data-field="vencimento">Vencimento</th> 
                     <th scope="col" data-field="valor">Valor</th>
+                    <th scope="col" data-field="juros">Juros</th>
+                    <th scope="col" data-field="cobranca">Cobrança</th>
+                    <th scope="col" data-field="valorMulta">Multa</th>
+                    <th scope="col" data-field="valor_total">Valor total</th>
                     <th scope="col" data-field="status">Status</th>
                 </tr>
             </thead>
@@ -292,15 +345,11 @@ echo "</p>";
         `).find('table')
         // $('#tabela_dividas tr.detail-view').html('<table></table>').find('table')
         table.bootstrapTable({
-            data: dadostable
-        })
-        $('#tabela_clientes').bootstrapTable('refreshOptions', {
+            data: dadostable,
             classes: "table"
         })
+        indice_table++
     }
-
-
-
 
     buscarSolicitacao()
 
@@ -342,23 +391,26 @@ echo "</p>";
     // ====================================
 
     function abriModalNegociarDividas() {
-        let arrayDivida = $('#tabela_dividas').bootstrapTable('getData')
+        const tabelas = $('.tabela_clientes')
         let arrayParaTabelaDivida = [];
         let valor = 0;
 
-        for (let i = 0; i < arrayDivida.length; i++) {
-            if (arrayDivida[i]['divida'] == true) {
-                if (arrayDivida[i]['status'] == 'Negociado') {
-                    continue
+        for (let j = 0; j < tabelas.length; j++) {
+            const arrayDivida = $(`#${tabelas[j].id}`).bootstrapTable('getData')
+            for (let i = 0; i < arrayDivida.length; i++) {
+                if (arrayDivida[i]['divida'] == true) {
+                    if (arrayDivida[i]['status'] == 'Negociado') {
+                        continue
+                    }
+                    //  Se o status for negociado vai passar pro próximo, ou seja, só vao aparecer os com status de pendente
+                    valor += retiraMascaraDinheiro(arrayDivida[i]['valor'])
+                    arrayParaTabelaDivida.push({
+                        id_dividas: arrayDivida[i]['id_dividas'],
+                        tipo_divida: arrayDivida[i]['tipo_divida'],
+                        valor: arrayDivida[i]['valor'],
+                        status: arrayDivida[i]['status']
+                    })
                 }
-                //  Se o status for negociado vai passar pro próximo, ou seja, só vao aparecer os com status de pendente
-                valor += retiraMascaraDinheiro(arrayDivida[i]['valor'])
-                arrayParaTabelaDivida.push({
-                    id_dividas: arrayDivida[i]['id_dividas'],
-                    tipo_divida: arrayDivida[i]['tipo_divida'],
-                    valor: arrayDivida[i]['valor'],
-                    status: arrayDivida[i]['status']
-                })
             }
         }
 
@@ -402,7 +454,7 @@ echo "</p>";
         $('#tabela_cliente').bootstrapTable('getData').forEach(cliente => {
             id_cad.push(cliente.id)
         })
-    
+
 
         if (id_cad != "") {
             $.ajax({
@@ -412,6 +464,11 @@ echo "</p>";
                     id_cad: id_cad,
                     tipo_divida: $("#tipo_divida").val(),
                     valor: retiraMascaraDinheiro($("#valor").val()),
+                    vencimento: $("#vencimento").val(),
+                    valorJuros: $("#valorJuros").val(),
+                    cobranca: $("#cobranca").val(),
+                    valorMulta: $("#valorMulta").val(),
+                    tipo_juros: $("#tipo_juros").val()
                 },
                 success: function(dados) {
                     dados = JSON.parse(dados)
@@ -546,4 +603,8 @@ echo "</p>";
             text: 'A vista'
         }));
     }
+
+    // ==========================================
+    // função dos checkeds do modal gerar dividas
+    // ==========================================
 </script>

@@ -25,39 +25,69 @@ WHERE
     }
 
     echo json_encode($arraypararetorno);
-    
 } else if ($_GET['tipo'] == 'dividas_emissor') {
     $q = "SELECT 
 	d.id_dividas,
 	c.id_cad,
-	c.nome,
 	d.tipo_divida,
 	d.valor,
-	d.status
+    d.vencimento,
+	d.status,
+    d.tipo_juros,
+    d.juros,
+    d.cobranca,
+    d.multa
+    -- if (d.tipo_juros = 'porc', (valor*juros)+multa, (valor+juros)+multa ) as total
+    -- valor+(valor*juros)+multa as total
 FROM
 	divida AS d   
 	JOIN
     cadastros AS c ON c.id_cad = d.id_cad
 WHERE 
     c.id_cad = {$_SESSION['id_cad_dividas']} and d.id_emissor = {$_GET['id_emissor']}";
-    
+
+    //2020-10-04
+    // echo $q;
+    // echo date('Y-m-d');
+
     $resultadoBuscaDividas = $conexao->query($q);
+
+    function calculaJuros($registro)
+    {
+        $database = date_create($registro->vencimento);
+        $datadehoje = date_create();
+        $resultado = date_diff($database, $datadehoje);
+        echo date_interval_format($resultado, '- '. '%a');
+    }
     
     $arraypararetorno = [];
-while($registro = $resultadoBuscaDividas->fetch_object()){
-    $valor = $registro->valor;
-    $array = [];
-    $array['id_dividas'] = $registro->id_dividas;
-    // $array['nome'] = $registro->nome; 
-    $array['tipo_divida'] = $registro->tipo_divida;
-    $array['valor'] = number_format($valor,2,",",".");
-    $array['status'] = $registro->status;
+    while ($registro = $resultadoBuscaDividas->fetch_object()) {
+        $valor = $registro->valor;
+        $array = [];
+        $datetime = new DateTime($registro->vencimento);
+        $datetimeformat = $datetime->format('d/m/Y');
+        $array['id_dividas'] = $registro->id_dividas;
+        // $array['nome'] = $registro->nome; 
+        $array['tipo_divida'] = $registro->tipo_divida;
+        $array['valor'] = number_format($valor, 2, ",", ".");
+        $array['status'] = $registro->status;
+        $array['vencimento'] = $datetimeformat;
+        if (strtotime($registro->vencimento) > strtotime(date('Y-m-d'))) {
+            $array['juros'] = 0;
+            $array['valorMulta'] = 0;
+            $array['valor_total'] = $valor;
+        } else {
+            $array['juros'] = $registro->juros;
+            $array['valorMulta'] = $registro->multa;
+        }
+        $array['tipo_juros'] = $registro->tipo_juros;
+        $array['cobranca'] = $registro->cobranca;
+        
+        $arraypararetorno[] = $array;
+        // calculaJuros($registro);
+    }
 
-    $arraypararetorno[] = $array;
-}                     
-
-echo json_encode($arraypararetorno);
-
+    echo json_encode($arraypararetorno);
 } else {
     $resultadoDaBuscaEmissores = $conexao->query("
             SELECT 
@@ -68,6 +98,7 @@ echo json_encode($arraypararetorno);
                 cadastros c ON c.id_cad = d.id_emissor
             WHERE
                 c.Pessoa = 'PJ'
+                and d.id_cad = {$_SESSION['id_cad_dividas']}
             group by c.cpf
             ");
 
