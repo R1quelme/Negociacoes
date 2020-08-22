@@ -592,8 +592,7 @@ echo "</p>";
             return
         }
         let parcelas = $('#valorTotal_negociar').attr('data-valor-divida') - retiraMascaraDinheiro($('#valor_entrada').val())
-        let resultado = parcelas / 100/ 
- /  ° °
+        let resultado = parcelas
         let arredondado = Math.ceil(resultado)
 
         for (let i = 1; i <= arredondado; i++) {
@@ -633,4 +632,4 @@ echo "</p>";
             $("#valorMulta").val("0");
         }
     }
-</script>// //  /°//     n °°°/°° ///°//  /  °       /// nnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn/ °   °/ //////
+</script>
