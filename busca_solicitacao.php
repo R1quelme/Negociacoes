@@ -63,6 +63,8 @@ WHERE
     $arraypararetorno = [];
     while ($registro = $resultadoBuscaDividas->fetch_object()) {
         $valor = $registro->valor;
+        $juros = $registro->juros;
+        $multa = $registro->multa;
         $array = [];
         $datetime = new DateTime($registro->vencimento);
         $datetimeformat = $datetime->format('d/m/Y');
@@ -73,15 +75,24 @@ WHERE
         $array['status'] = $registro->status;
         $array['vencimento'] = $datetimeformat;
         if (strtotime($registro->vencimento) > strtotime(date('Y-m-d'))) {
-            $array['juros'] = 0;
-            $array['valorMulta'] = 0;
-            $array['valor_total'] = $valor;
+            $array['juros'] = number_format(0, 2, ",", ".");
+            $array['valorMulta'] = number_format(0, 2, ",", ".");
+            $array['valor_total'] = number_format($valor, 2, ",", ".");
         } else {
-            $array['juros'] = $registro->juros;
-            $array['valorMulta'] = $registro->multa;
+            $array['juros'] = number_format($juros, 2, ",", ".");
+            $array['valorMulta'] = number_format($multa, 2, ",", ".");
         }
         $array['tipo_juros'] = $registro->tipo_juros;
-        $array['cobranca'] = $registro->cobranca;
+
+        if($registro->cobranca == 'D'){
+            $array['cobranca'] = "Diaria";
+        } elseif($registro->cobranca == 'M'){
+            $array['cobranca'] = "Mensal";
+        } elseif($registro->cobranca == 'A'){
+            $array['cobranca'] = "Anual";
+        } else{
+            $array['cobranca'] = "Nulo";
+        }
         
         $arraypararetorno[] = $array;
         // calculaJuros($registro);

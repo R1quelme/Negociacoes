@@ -36,6 +36,10 @@ echo "</p>";
         background: url(Fundo.png) no-repeat;
         background-size: cover;
     }
+
+    #aparecer{
+        display: none;
+    }
 </style>
 
 <body id="body">
@@ -118,45 +122,45 @@ echo "</p>";
                                 <label for="valor">Valor da divida</label>
                                 <input ontype="number" name="valor" id="valor" class="form-control" required>
                             </div><br>
-                            <div class="form-group">
-                                <label for="juros">Vai ter Juros? </label>
-                                <select name="juros" id="juros" class="form-control" required>
-                                    <option value="">Selecione uma resposta</option>
-                                    <option value="sim">Sim</option>
-                                    <option value="nao">Não</option>
-                                </select>
-                            </div>
-                            <div class="form_group">
-                                <label for="tipo_juros">Tipo dos juros: </label>
-                                <select name="tipo_juros" id="tipo_juros" class="form-control">
-                                    <option value="">Selecione uma resposta</option>
-                                    <option value="val">Valor</option>
-                                    <option value="porc">Porcentagem</option>
-                                </select>
-                            </div><br>
-                            <div class="form_group">
-                                <label for="valorJuros">Porcentagem dos juros: </label>
-                                <input ontype="number" name="valorJuros" id="valorJuros" class="form-control">
-                            </div><br>
-                            <div class="form-group">
-                                <label for="cobranca">Juros vai ser: </label>
-                                <select name="cobranca" id="cobranca" class="form-control">
-                                    <option value="">Selecione uma resposta</option>
-                                    <option value="">Nao vai ter</option>
-                                    <option value="D">Diario</option>
-                                    <option value="M">Mensal</option>
-                                    <option value="A">Anual</option>
-                                </select>
-                            </div>
-                            <div class="form_group">
-                                <label for="valorMulta">Valor da multa: </label>
-                                <input ontype="number" name="valorMulta" id="valorMulta" class="form-control">
-                            </div><br>
                             <div class="form_group">
                                 <label for="vencimento">Vencimento: </label>
                                 <input type="date" name="vencimento" id="vencimento" class="form-control" required>
-                            </div>
-
+                            </div><br>
+                            <div class="form-group">
+                                <label for="juros">Vai ter Juros? </label>
+                                <select name="juros" id="juros" class="form-control" onchange="aparecer()" required>
+                                    <option value="">Selecione uma resposta</option>
+                                    <option value="sim">Sim</option>
+                                    <option value="nao">Não</option>
+                                </select><br>
+                            <div id="aparecer" >
+                                <div class="form_group">
+                                    <label for="tipo_juros">Tipo dos juros: </label>
+                                    <select name="tipo_juros" id="tipo_juros" onchange="mascara_tipoJuros()" class="form-control">
+                                        <option value="">Selecione uma resposta</option>
+                                        <option value="val">Valor</option>
+                                        <option value="porc">Porcentagem</option>
+                                    </select>
+                                </div><br>
+                                <div class="form_group">
+                                    <label for="valorJuros">Valor ou porcentagem dos juros: </label>
+                                    <input ontype="number" name="valorJuros" id="valorJuros" class="form-control">
+                                </div><br>
+                                <div class="form-group">
+                                    <label for="cobranca">Juros vai ser: </label>
+                                    <select name="cobranca" id="cobranca" class="form-control">
+                                        <option value="">Selecione uma resposta</option>
+                                        <option value="N" hidden>Não há</option>
+                                        <option value="D">Diario</option>
+                                        <option value="M">Mensal</option>
+                                        <option value="A">Anual</option>
+                                    </select>
+                                </div>
+                                <div class="form_group">
+                                    <label for="valorMulta">Valor da multa: </label>
+                                    <input ontype="number" name="valorMulta" id="valorMulta" class="form-control">
+                                </div>
+                            </div>    
                             
 
                             <hr>
@@ -260,8 +264,18 @@ echo "</p>";
         reverse: true
     });
 
-    // $("#valorJuros").mask("00%");
-
+    function mascara_tipoJuros() {
+        if ($('#tipo_juros').val() === "val") {
+            $("#valorJuros").mask('000.000.000.000.000,00', {
+                reverse: true
+            })
+        } else if ($('#tipo_juros').val() === "porc") {
+            $("#valorJuros").mask('000,00%', {
+                reverse: true
+            })
+        }
+    }
+    mascara_tipoJuros()
 
 
     // ====================================
@@ -465,9 +479,9 @@ echo "</p>";
                     tipo_divida: $("#tipo_divida").val(),
                     valor: retiraMascaraDinheiro($("#valor").val()),
                     vencimento: $("#vencimento").val(),
-                    valorJuros: $("#valorJuros").val(),
+                    valorJuros: retiraMascaraDinheiro($("#valorJuros").val()),
                     cobranca: $("#cobranca").val(),
-                    valorMulta: $("#valorMulta").val(),
+                    valorMulta: retiraMascaraDinheiro($("#valorMulta").val()),
                     tipo_juros: $("#tipo_juros").val()
                 },
                 success: function(dados) {
@@ -561,7 +575,7 @@ echo "</p>";
     }
 
     function retiraMascaraDinheiro(n) {
-        return Number(n.replace('.', '').replace(',', '.'));
+        return Number(n.replace('.', '').replace(',', '.').replace('%', ''));
     }
     //---------------------------------------------
 
@@ -578,8 +592,8 @@ echo "</p>";
             return
         }
         let parcelas = $('#valorTotal_negociar').attr('data-valor-divida') - retiraMascaraDinheiro($('#valor_entrada').val())
-        let resultado = parcelas / 100
-
+        let resultado = parcelas / 100/ 
+ /  ° °
         let arredondado = Math.ceil(resultado)
 
         for (let i = 1; i <= arredondado; i++) {
@@ -607,4 +621,16 @@ echo "</p>";
     // ==========================================
     // função dos checkeds do modal gerar dividas
     // ==========================================
-</script>
+    function aparecer()
+    {   
+        if($('#juros').val() == "sim"){
+            document.getElementById("aparecer").setAttribute('style', 'display: block')
+        } else{
+            document.getElementById("aparecer").setAttribute('style', 'display: none')
+            $("#tipo_juros").val("val");
+            $("#valorJuros").val("0");
+            $("#cobranca").val("N");
+            $("#valorMulta").val("0");
+        }
+    }
+</script>// //  /°//     n °°°/°° ///°//  /  °       /// nnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn/ °   °/ //////
