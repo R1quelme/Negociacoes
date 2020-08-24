@@ -7,10 +7,10 @@ $id_emissor = $_SESSION['id_cad_dividas'];
 $tipo_divida = $_POST['tipo_divida'];
 $valor = $_POST['valor'];
 $vencimento = $_POST['vencimento'];
-$tipo_juros = $_POST['tipo_juros'];
-$valorJuros = $_POST['valorJuros'];
-$cobranca = $_POST['cobranca'];
-$valorMulta = $_POST['valorMulta'];
+$tipo_juros = $_POST['tipo_juros'] ?? NULL;
+$valorJuros = $_POST['valorJuros'] ?? NULL;
+$cobranca = $_POST['cobranca'] ?? NULL;
+$valorMulta = $_POST['valorMulta'] ?? NULL;
 
 // $juros_calculado = ($valor / 100 * $valorJuros);
 // $valor_total = ($valor + $juros_calculado + $valorMulta);
