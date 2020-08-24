@@ -57,7 +57,23 @@ WHERE
         $database = date_create($registro->vencimento);
         $datadehoje = date_create();
         $resultado = date_diff($database, $datadehoje);
-        echo date_interval_format($resultado, '- '. '%a');
+        $resultado->format("%a");
+        $diasVencidos = $resultado->format("%a");
+
+        if($registro->cobranca == 'D'){
+            if($registro->tipo_juros == 'porc'){
+                $diasVencidos * $registro->juros;  
+            } else{
+                $diasVencidos * $registro->juros;
+            }
+        } 
+        // else if($registro->cobranca == 'M'){
+        //     if($diasVencidos > 30){
+        //         $diasVencidos * ;
+        //     } 
+        // } else if($registro->cobranca == 'A'){
+        //     $diasVencidos * 1; 
+        // } 
     }
     
     $arraypararetorno = [];
@@ -74,6 +90,7 @@ WHERE
         $array['valor'] = number_format($valor, 2, ",", ".");
         $array['status'] = $registro->status;
         $array['vencimento'] = $datetimeformat;
+        $array['tipo_juros'] = $registro->tipo_juros;
         if (strtotime($registro->vencimento) > strtotime(date('Y-m-d'))) {
             $array['juros'] = number_format(0, 2, ",", ".");
             $array['valorMulta'] = number_format(0, 2, ",", ".");
@@ -81,6 +98,7 @@ WHERE
         } else {
             $array['juros'] = number_format($juros, 2, ",", ".");
             $array['valorMulta'] = number_format($multa, 2, ",", ".");
+            calculaJuros($registro);
         }
         $array['tipo_juros'] = $registro->tipo_juros;
 
@@ -95,7 +113,6 @@ WHERE
         }
         
         $arraypararetorno[] = $array;
-        // calculaJuros($registro);
     }
 
     echo json_encode($arraypararetorno);

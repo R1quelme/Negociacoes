@@ -371,6 +371,7 @@ echo "</p>";
                     <th scope="col" data-field="vencimento">Vencimento</th> 
                     <th scope="col" data-field="valor">Valor</th>
                     <th scope="col" data-field="juros">Juros</th>
+                    <th scope="col" data-field="tipo_juros">Tipo juros</th>
                     <th scope="col" data-field="cobranca">Cobrança</th>
                     <th scope="col" data-field="valorMulta">Multa</th>
                     <th scope="col" data-field="valor_total">Valor total</th>
@@ -654,7 +655,6 @@ echo "</p>";
             $("#tipo_juros").val("");
             $("#valorJuros").val("");
             $("#cobranca").val("");
-            $("#valorMulta").val("");
         }
     }
     validaJuros()
