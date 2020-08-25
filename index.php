@@ -371,7 +371,6 @@ echo "</p>";
                     <th scope="col" data-field="vencimento">Vencimento</th> 
                     <th scope="col" data-field="valor">Valor</th>
                     <th scope="col" data-field="juros">Juros</th>
-                    <th scope="col" data-field="tipo_juros">Tipo juros</th>
                     <th scope="col" data-field="cobranca">Cobrança</th>
                     <th scope="col" data-field="valorMulta">Multa</th>
                     <th scope="col" data-field="valor_total">Valor total</th>
@@ -440,11 +439,11 @@ echo "</p>";
                         continue
                     }
                     //  Se o status for negociado vai passar pro próximo, ou seja, só vao aparecer os com status de pendente
-                    valor += retiraMascaraDinheiro(arrayDivida[i]['valor'])
+                    valor += retiraMascaraDinheiro(arrayDivida[i]['valor_total'])
                     arrayParaTabelaDivida.push({
                         id_dividas: arrayDivida[i]['id_dividas'],
                         tipo_divida: arrayDivida[i]['tipo_divida'],
-                        valor: arrayDivida[i]['valor'],
+                        valor: arrayDivida[i]['valor_total'],
                         status: arrayDivida[i]['status']
                     })
                 }

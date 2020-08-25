@@ -10,8 +10,13 @@ $vencimento = $_POST['vencimento'];
 $valorJuros = $_POST['valorJuros'];
 $cobranca = $_POST['cobranca'];
 $valorMulta = $_POST['valorMulta'];
+$tipo_juros = $_POST['tipo_juros'];
 
-$juros_calculado = ($valor / 100 * $valorJuros);
+if($tipo_juros == 'porc'){
+    $juros_calculado = ($valor / 100 * $valorJuros);
+} else{
+    $juros_calculado = $valorJuros;
+}
 // $valor_total = ($valor + $juros_calculado + $valorMulta);
 
 // echo "<pre>";
@@ -23,9 +28,9 @@ $message = [];
 for ($i = 0; $i < count($id_cad); $i++) {
     $q = "INSERT 
         INTO `dividas`.`divida`
-            (`id_cad`, `id_emissor`, `tipo_divida`, `valor`, `vencimento`, `juros`, `cobranca`, `multa`)
+            (`id_cad`, `id_emissor`, `tipo_divida`, `valor`, `vencimento`, `tipo_juros`, `juros`, `cobranca`, `multa`)
         VALUES 
-            ('$id_cad[$i]', '$id_emissor', '$tipo_divida', '$valor', '$vencimento', '$valorJuros', '$cobranca', '$valorMulta');
+            ('$id_cad[$i]', '$id_emissor', '$tipo_divida', '$valor', '$vencimento', '$tipo_juros', '$juros_calculado', '$cobranca', '$valorMulta');
     ";
     $res = mysqli_query($conexao, $q);
 
