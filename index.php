@@ -235,8 +235,10 @@ echo "</p>";
                                     <table id="tabela_cliente">
                                         <thead>
                                             <tr>
-                                                <th scope="col" data-field="valor">Valor</th>
-                                                <th scope="col" data-field="status">Status</th>
+                                                <th scope="col" data-field="valor_inicial">Valor principal</th>
+                                                <th scope="col" data-field="valor_total">Valor a negociar</th>
+                                                <!-- <th scope="col" data-field="status">Status</th> -->
+                                                <th scope="col" data-field="tipo_divida">Tipo da divida</th>
                                             </tr>
                                         </thead>
                                     </table>
@@ -443,8 +445,9 @@ echo "</p>";
                     arrayParaTabelaDivida.push({
                         id_dividas: arrayDivida[i]['id_dividas'],
                         tipo_divida: arrayDivida[i]['tipo_divida'],
-                        valor: arrayDivida[i]['valor_total'],
-                        status: arrayDivida[i]['status']
+                        valor_total: arrayDivida[i]['valor_total'],
+                        valor_inicial: arrayDivida[i]['valor'],
+                        status: arrayDivida[i]['status'],
                     })
                 }
             }
@@ -616,11 +619,12 @@ echo "</p>";
         let parcelas = $('#valorTotal_negociar').attr('data-valor-divida') - retiraMascaraDinheiro($('#valor_entrada').val())
         let resultado = parcelas
         let arredondado = Math.ceil(resultado)
-
+        
         for (let i = 1; i <= arredondado; i++) {
             let valores = parcelas / i
+            if(valores < 50) return
             $('#valor_negociar').append($('<option>', {
-                value: [i],
+                value: [i], 
                 text: [i] + 'x de R$ ' + formataDinheiro(valores)
                 // (Math.round(valores * 100) / 100).toFixed(2)
             }))
