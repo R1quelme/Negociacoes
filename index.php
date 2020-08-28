@@ -99,7 +99,6 @@ echo "</p>";
 
 
 
-
     <?php
     if (is_admin()) {
     ?>
@@ -215,9 +214,16 @@ echo "</p>";
                     </div>
                     <form onsubmit="return negociarDividas(event)">
                         <div class="modal-body">
-                            <div class="form_group">
-                                <label for="valorTotal_negociar">Valor total</label>
-                                <input type="text" name="valorTotal_negociar" data-valor-divida="" id="valorTotal_negociar" class="form-control" readonly required />
+                            <label for="valorTotal_negociar">Valor a negociar</label><br>
+                            <div class="input-group">
+                                <input type="text" name="valorTotal_negociar" data-valor-divida="" id="valorTotal_negociar" class="form-control" aria-label="Text input with dropdown button" readonly required />
+                                <div class="input-group-append">
+                                    <select class="btn btn-outline-secondary dropdown-toggle" onchange="formaDePagamento()" onclick="formaDePagamento()" name="pagamento" id="pagamento">
+                                        <option value="" hidden>Forma de pagamento</option>
+                                        <option value="vista">A vista</option>
+                                        <option value="parcelado">Parcelado</option>
+                                    </select>
+                                </div>
                             </div><br>
                             <div class="form_group" id="vd">
                                 <label for="valor_entrada">Valor da entrada</label>
@@ -619,15 +625,18 @@ echo "</p>";
         let parcelas = $('#valorTotal_negociar').attr('data-valor-divida') - retiraMascaraDinheiro($('#valor_entrada').val())
         let resultado = parcelas
         let arredondado = Math.ceil(resultado)
-        
+
         for (let i = 1; i <= arredondado; i++) {
+            // for (let j = 0.50; j <= [i]; j += 0.20) {
             let valores = parcelas / i
-            if(valores < 50) return
+            if (valores < 50) return
             $('#valor_negociar').append($('<option>', {
-                value: [i], 
+                value: [i],
                 text: [i] + 'x de R$ ' + formataDinheiro(valores)
+                // + 'com juros de: ' + [j] + '%'
                 // (Math.round(valores * 100) / 100).toFixed(2)
             }))
+            // }
         }
     }
 
@@ -662,12 +671,12 @@ echo "</p>";
     }
     validaJuros()
 
-    function campoPorcMulta(){
-        if($('#tipo_multa').val() == ""){
-            document.getElementById("aparecerMulta").setAttribute('style', 'display: none') 
-        } else if($('#tipo_multa').val() == "val"){
+    function campoPorcMulta() {
+        if ($('#tipo_multa').val() == "") {
             document.getElementById("aparecerMulta").setAttribute('style', 'display: none')
-        } else if($('#tipo_multa').val() == "porc"){
+        } else if ($('#tipo_multa').val() == "val") {
+            document.getElementById("aparecerMulta").setAttribute('style', 'display: none')
+        } else if ($('#tipo_multa').val() == "porc") {
             document.getElementById("aparecerMulta").setAttribute('style', 'display: block')
         }
     }
@@ -678,7 +687,16 @@ echo "</p>";
         if ($('#tipo_multa').val() == "porc") {
             let conta = (retiraMascaraDinheiro($('#valor').val()) * valorDivisao / 100);
             $('#valorMulta').val(formataDinheiro(conta))
-        } 
+        }
     }
     calculaPorcentagem()
+
+    function formaDePagamento(){
+        if($('#pagamento').val() == 'vista'){
+            avista()
+        } else{
+            parcelas();
+            $('#vd').attr('hidden', false)
+        }
+    }
 </script>
