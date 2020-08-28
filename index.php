@@ -552,30 +552,30 @@ echo "</p>";
 
         calcula()
 
-        if ($('#mensagemAppend').length > 0 == false) {
-            $.ajax({
-                url: "ajax/negociarDivida.php",
-                method: "POST",
-                data: {
-                    id_dividas: id_dividas
-                },
-                success: function(dados) {
-                    dados = JSON.parse(dados)
-                    if (dados.status == "sucesso") {
-                        buscarSolicitacao()
-                        $('#dividas-gerar').modal('hide')
-                        alertaMensagem('Divida registrada com sucesso')
-                    } else {
+            if ($('#mensagemAppend').length > 0 == false) {
+                $.ajax({
+                    url: "ajax/negociarDivida.php",
+                    method: "POST",
+                    data: {
+                        id_dividas: id_dividas
+                    },
+                    success: function(dados) {
+                        dados = JSON.parse(dados)
+                        if (dados.status == "sucesso") {
+                            buscarSolicitacao()
+                            $('#dividas-gerar').modal('hide')
+                            alertaMensagem('Divida registrada com sucesso')
+                        } else {
+                            alertaMensagem('Erro ao registrar divida, favor contatar o suporte', false)
+                        }
+                    },
+                    error: function() {
                         alertaMensagem('Erro ao registrar divida, favor contatar o suporte', false)
                     }
-                },
-                error: function() {
-                    alertaMensagem('Erro ao registrar divida, favor contatar o suporte', false)
-                }
-            })
-        } else {
-            alertaMensagem('Entrada de no mínimo 10%', false);
-        }
+                })
+            } else {
+                alertaMensagem('Entrada de no mínimo 10%', false);
+            }
     }
 
 
@@ -584,15 +584,17 @@ echo "</p>";
     // ===========================================
 
     function calcula() {
+        retiraMascaraDinheiro($('#valor_entrada').val())
+        $('#valor_entrada').val(formataDinheiro(retiraMascaraDinheiro($('#valor_entrada').val())))
 
-        const conta = (retiraMascaraDinheiro($('#valorTotal_negociar').val()) * 0.1).toFixed(2);
+        const conta = Number((retiraMascaraDinheiro($('#valorTotal_negociar').val()) * 0.1).toFixed(2));
 
         if ($('#mensagemAppend').length > 0) {
-            if (conta <= retiraMascaraDinheiro($('#valor_entrada').val()).toFixed(2)) {
+            if (conta <= Number(retiraMascaraDinheiro($('#valor_entrada').val()).toFixed(2))) {
                 $('#mensagemAppend').remove()
             }
         } else {
-            if (conta <= retiraMascaraDinheiro($('#valor_entrada').val()).toFixed(2)) {
+            if (conta <= Number(retiraMascaraDinheiro($('#valor_entrada').val()).toFixed(2))) {
                 parcelas()
             } else {
                 $('#vd').append(`<p style="color:red; font-weight: 600;" id='mensagemAppend'>Entrada de no mínimo 10%</p>`)
