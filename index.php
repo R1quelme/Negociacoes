@@ -552,30 +552,30 @@ echo "</p>";
 
         calcula()
 
-            if ($('#mensagemAppend').length > 0 == false) {
-                $.ajax({
-                    url: "ajax/negociarDivida.php",
-                    method: "POST",
-                    data: {
-                        id_dividas: id_dividas
-                    },
-                    success: function(dados) {
-                        dados = JSON.parse(dados)
-                        if (dados.status == "sucesso") {
-                            buscarSolicitacao()
-                            $('#dividas-gerar').modal('hide')
-                            alertaMensagem('Divida registrada com sucesso')
-                        } else {
-                            alertaMensagem('Erro ao registrar divida, favor contatar o suporte', false)
-                        }
-                    },
-                    error: function() {
+        if ($('#mensagemAppend').length > 0 == false) {
+            $.ajax({
+                url: "ajax/negociarDivida.php",
+                method: "POST",
+                data: {
+                    id_dividas: id_dividas
+                },
+                success: function(dados) {
+                    dados = JSON.parse(dados)
+                    if (dados.status == "sucesso") {
+                        buscarSolicitacao()
+                        $('#dividas-gerar').modal('hide')
+                        alertaMensagem('Divida registrada com sucesso')
+                    } else {
                         alertaMensagem('Erro ao registrar divida, favor contatar o suporte', false)
                     }
-                })
-            } else {
-                alertaMensagem('Entrada de no mínimo 10%', false);
-            }
+                },
+                error: function() {
+                    alertaMensagem('Erro ao registrar divida, favor contatar o suporte', false)
+                }
+            })
+        } else {
+            alertaMensagem('Entrada de no mínimo 10%', false);
+        }
     }
 
 
@@ -584,21 +584,31 @@ echo "</p>";
     // ===========================================
 
     function calcula() {
-        retiraMascaraDinheiro($('#valor_entrada').val())
-        $('#valor_entrada').val(formataDinheiro(retiraMascaraDinheiro($('#valor_entrada').val())))
+        if(retiraMascaraDinheiro($('#valor_entrada').val()) <= retiraMascaraDinheiro($('#valorTotal_negociar').val())){
+            // function negative(number) { 
+            // if(number.match(/^0\d+$/)){
+            // retiraMascaraDinheiro($('#valor_entrada').val())
+            $('#valor_entrada').val(formataDinheiro(retiraMascaraDinheiro($('#valor_entrada').val())))
+            // }
+            // }
+            // negative(retiraMascaraDinheiro($('#valor_entrada').val()))
 
-        const conta = Number((retiraMascaraDinheiro($('#valorTotal_negociar').val()) * 0.1).toFixed(2));
+            const conta = Number((retiraMascaraDinheiro($('#valorTotal_negociar').val()) * 0.1).toFixed(2));
 
-        if ($('#mensagemAppend').length > 0) {
-            if (conta <= Number(retiraMascaraDinheiro($('#valor_entrada').val()).toFixed(2))) {
-                $('#mensagemAppend').remove()
+            if ($('#mensagemAppend').length > 0) {
+                if (conta <= Number(retiraMascaraDinheiro($('#valor_entrada').val()).toFixed(2))) {
+                    $('#mensagemAppend').remove()
+                }
+            } else {
+                if (conta <= Number(retiraMascaraDinheiro($('#valor_entrada').val()).toFixed(2))) {
+                    parcelas()
+                } else {
+                    $('#vd').append(`<p style="color:red; font-weight: 600;" id='mensagemAppend'>Entrada de no mínimo 10%</p>`)
+                }
             }
         } else {
-            if (conta <= Number(retiraMascaraDinheiro($('#valor_entrada').val()).toFixed(2))) {
-                parcelas()
-            } else {
-                $('#vd').append(`<p style="color:red; font-weight: 600;" id='mensagemAppend'>Entrada de no mínimo 10%</p>`)
-            }
+            alertaMensagem('Valor de entrada maior que o valor total', false);
+            $('#valor_entrada').val(formataDinheiro(retiraMascaraDinheiro($('#valorTotal_negociar').val()) * 0.1))
         }
     }
 
@@ -696,9 +706,10 @@ echo "</p>";
     function formaDePagamento(){
         if($('#pagamento').val() == 'vista'){
             avista()
-        } else{
+        } else if($('#pagamento').val() == 'parcelado'){
             parcelas();
             $('#vd').attr('hidden', false)
+            $('#valor_entrada').val(formataDinheiro(retiraMascaraDinheiro($('#valorTotal_negociar').val()) * 0.1))
         }
     }
 </script>
