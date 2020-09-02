@@ -10,10 +10,14 @@ echo "<p class='pequeno'>";
 if (empty($_SESSION['nome_dividas'])) {
     echo "<a href='user-login.php'>Entrar</a>";
 } else {
+    echo "<div class='d-block p-2 bg-dark text-white' style='position: absolute;'>";
     echo "Olá, " . $_SESSION['nome_dividas'] . " | ";
     echo "<a href='user-logout.php'>Sair</a>";
+    echo "</div>";
 }
 echo "</p>";
+echo "<br>";
+echo "<br>";
 ?>
 
 <!DOCTYPE html>

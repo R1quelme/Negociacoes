@@ -14,13 +14,11 @@ function formulario($msg, $nome = "")
         <h1>Login</h1>
 
         <div class="txtb">
-            <input type="text" name="usuario" id="usuario" value="' . $nome . '">
-            <span data-placeholder="Usuário"></span>
+            <input type="text" name="usuario" id="usuario" value="' . $nome . '" placeholder="Usuário">
         </div>
 
         <div class="txtb">
-            <input type="password" name="senha" id="senha">
-            <span data-placeholder="Senha"></span>
+            <input type="password" name="senha" id="senha" placeholder="Senha">
         </div>
         ' . $msg . ' 
         <input type="submit" class="logbtn" value="Entrar">
@@ -35,7 +33,7 @@ function formulario($msg, $nome = "")
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style4.css">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
     <title>Dividas</title>
 </head>
@@ -137,16 +135,13 @@ function formulario($msg, $nome = "")
         </div>
     </div>
 
-    
-
-
     <script src="https://code.jquery.com/jquery-3.5.0.min.js" integrity="sha256-xNzN2a4ltkB44Mc/Jz3pT4iU1cmeR0FkXs4pru/JxaQ=" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <!-- <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script> -->
     <script src="https://unpkg.com/bootstrap-table@1.16.0/dist/bootstrap-table.min.js"></script>
     <script src="tata-master/dist/tata.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" charset="utf-8"></script>
-    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.11/jquery.mask.min.js"></script> -->
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" charset="utf-8"></script> -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.11/jquery.mask.min.js"></script>
 </body>
 
 <script type="text/javascript">
@@ -163,15 +158,6 @@ function formulario($msg, $nome = "")
         }
     }
     mascara()
-
-    $(".txtb input").on("focus",function(){
-        $(this).addClass("focus");
-      });
-
-      $(".txtb input").on("blur",function(){
-        if($(this).val() == "")
-        $(this).removeClass("focus");
-    });
 
     //     $("#cpf").keydown(function(){
     //     try {
