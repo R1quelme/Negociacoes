@@ -5,20 +5,7 @@ require_once 'conexoes/login.php';
 if (!is_logado()) {
     header("location: user-login.php");
     die;
-}
-echo "<p class='pequeno'>";
-if (empty($_SESSION['nome_dividas'])) {
-    echo "<a href='user-login.php'>Entrar</a>";
-} else {
-    echo "<div class='d-block p-2 bg-dark text-white' style='position: absolute;'>";
-    echo "Olá, " . $_SESSION['nome_dividas'] . " | ";
-    echo "<a href='user-logout.php'>Sair</a>";
-    echo "</div>";
-}
-echo "</p>";
-echo "<br>";
-echo "<br>";
-?>
+} ?>
 
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -39,6 +26,8 @@ echo "<br>";
         font-family: sans-serif;
         background: url(Fundo.png) no-repeat;
         background-size: cover;
+        margin: 0;
+        padding: 0;
     }
 
     #aparecer {
@@ -57,6 +46,20 @@ echo "<br>";
 </style>
 
 <body id="body" onload="loading()">
+        <?php
+        if (empty($_SESSION['nome_dividas'])) {
+        ?>
+            <a href='user-login.php'>Entrar</a>
+        <?php
+        } else {
+        ?>
+            <div style="margin-bottom: 29px;" class='d-block p-2 bg-dark text-white'>
+                Olá, <?= $_SESSION['nome_dividas'] ?> |
+                <a href='user-logout.php'>Sair</a>
+            </div>
+        <?php
+        }
+        ?>
     <div id="load"></div>
     <div class="table responsive">
         <div class="container">
@@ -286,16 +289,16 @@ echo "<br>";
 
 <script>
     // var i = setInterval(function () {
-    
+
     // clearInterval(i);
-  
+
     // O código desejado é apenas isto:
     // document.getElementById("loading").style.display = "none";
     // document.getElementById("conteudo").style.display = "block";
     // });
 
-    function loading(){
-     $('#load').css('display','none');
+    function loading() {
+        $('#load').css('display', 'none');
     }
 
     $('#valorTotal_negociar').mask('000.000.000.000.000,00', {
@@ -615,7 +618,7 @@ echo "<br>";
     // ===========================================
 
     function calcula() {
-        if(retiraMascaraDinheiro($('#valor_entrada').val()) <= retiraMascaraDinheiro($('#valorTotal_negociar').val())){
+        if (retiraMascaraDinheiro($('#valor_entrada').val()) <= retiraMascaraDinheiro($('#valorTotal_negociar').val())) {
             // function negative(number) { 
             // if(number.match(/^0\d+$/)){
             // retiraMascaraDinheiro($('#valor_entrada').val())
@@ -675,7 +678,7 @@ echo "<br>";
             if (valores < 50) return
             $('#valor_negociar').append($('<option>', {
                 value: [i],
-                text: [i] + 'x de R$ ' + formataDinheiro(valores) 
+                text: [i] + 'x de R$ ' + formataDinheiro(valores)
                 // + 'com juros de: ' + [j] + '%'
                 // (Math.round(valores * 100) / 100).toFixed(2)
             }))
@@ -734,10 +737,10 @@ echo "<br>";
     }
     calculaPorcentagem()
 
-    function formaDePagamento(){
-        if($('#pagamento').val() == 'vista'){
+    function formaDePagamento() {
+        if ($('#pagamento').val() == 'vista') {
             avista()
-        } else if($('#pagamento').val() == 'parcelado'){
+        } else if ($('#pagamento').val() == 'parcelado') {
             parcelas();
             $('#vd').attr('hidden', false)
             $('#valor_entrada').val(formataDinheiro(retiraMascaraDinheiro($('#valorTotal_negociar').val()) * 0.1))
