@@ -40,9 +40,20 @@ echo "</p>";
     #aparecer {
         display: none;
     }
+
+    #load {
+        position: fixed;
+        display: block;
+        z-index: 9999;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+    }
 </style>
 
-<body id="body">
+<body id="body" onload="loading()">
+    <div id="load"></div>
     <div class="table responsive">
         <div class="container">
             <?php
@@ -270,6 +281,19 @@ echo "</p>";
 
 
 <script>
+    // var i = setInterval(function () {
+    
+    // clearInterval(i);
+  
+    // O código desejado é apenas isto:
+    // document.getElementById("loading").style.display = "none";
+    // document.getElementById("conteudo").style.display = "block";
+    // });
+
+    function loading(){
+     $('#load').css('display','none');
+    }
+
     $('#valorTotal_negociar').mask('000.000.000.000.000,00', {
         reverse: true
     });
@@ -370,23 +394,26 @@ echo "</p>";
     function criaTabela(table, dadostable) {
         // console.log(table)
         table = table.html(`
-        <table class="tabela_clientes" id='table_${indice_table}'>
-            <thead>
-                <tr>
-                    <th scope="col" data-field="id_dividas" data-visible="false"></th>
-                    <th scope="col" data-field="divida" data-checkbox="true"></th>
-                    <th scope="col" data-field="tipo_divida">Tipo de dividas</th>
-                    <th scope="col" data-field="vencimento">Vencimento</th> 
-                    <th scope="col" data-field="valor">Valor</th>
-                    <th scope="col" data-field="juros">Juros</th>
-                    <th scope="col" data-field="cobranca">Cobrança</th>
-                    <th scope="col" data-field="valorMulta">Multa</th>
-                    <th scope="col" data-field="valor_total">Valor total</th>
-                    <th scope="col" data-field="status">Status</th>
-                </tr>
-            </thead>
-        </table>
+            <table class="tabela_clientes" id='table_${indice_table}'>
+                <thead>
+                    <tr>
+                        <th scope="col" data-field="id_dividas" data-visible="false"></th>
+                        <th scope="col" data-field="divida" data-checkbox="true"></th>
+                        <th scope="col" data-field="tipo_divida">Tipo de dividas</th>
+                        <th scope="col" data-field="vencimento">Vencimento</th> 
+                        <th scope="col" data-field="valor">Valor</th>
+                        <th scope="col" data-field="juros">Juros</th>
+                        <th scope="col" data-field="cobranca">Cobrança</th>
+                        <th scope="col" data-field="valorMulta">Multa</th>
+                        <th scope="col" data-field="valor_total">Valor total</th>
+                        <th scope="col" data-field="status">Status</th>
+                    </tr>
+                </thead>
+            </table>
         `).find('table')
+        // <div id="loading" align="center" style="display: block">
+        //     <img src="http://media.giphy.com/media/FwviSlrsfa4aA/giphy.gif" style="width:150px;height:150px;"/>
+        // </div>
         // $('#tabela_dividas tr.detail-view').html('<table></table>').find('table')
         table.bootstrapTable({
             data: dadostable,
@@ -644,7 +671,7 @@ echo "</p>";
             if (valores < 50) return
             $('#valor_negociar').append($('<option>', {
                 value: [i],
-                text: [i] + 'x de R$ ' + formataDinheiro(valores)
+                text: [i] + 'x de R$ ' + formataDinheiro(valores) 
                 // + 'com juros de: ' + [j] + '%'
                 // (Math.round(valores * 100) / 100).toFixed(2)
             }))
@@ -656,7 +683,7 @@ echo "</p>";
         if ($('#valor_negociar option').length > 0) {
             $('#valor_negociar option').remove()
         }
-
+        $("#pagamento").val($('option:contains("A vista")').val());
         $('#vd').attr('hidden', true)
         $('#valor_negociar').append($('<option>', {
             value: 1,

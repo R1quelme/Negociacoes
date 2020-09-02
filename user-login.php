@@ -9,27 +9,23 @@ if (is_logado()) {
 
 function formulario($msg, $nome = "")
 {
-    echo '<br><form action="user-login.php" method="post">
-                <div class="container">
-                <div class="corpo">
-                    <div class="row">
-                        <div class="col-md-3 col-md-offset-0">
-                            <div class="form-group">
-                                <label><b>Usuário</b></label>
-                                <input type="text" name="usuario" id="usuario" class="form-control" value="' . $nome . '">
-                            </div>
-                            <div class="form-group">
-                                <label><b>Senha</b></label>
-                                <input type="password" name="senha" id="senha" class="form-control">
-                                <a href="" data-toggle="modal" data-target="#criarCadastro">Criar novo cadastro</a>
-                            </div>
-                            ' . $msg . ' 
-                            <input type="submit" class="btn btn-success btn-block" value="Entrar">
-                        </div>
-                    </div>
-                </div>
-            </div>
-            </form>';
+    echo '
+    <form action="user-login.php" method="post" class="login-form">
+        <h1>Login</h1>
+
+        <div class="txtb">
+            <input type="text" name="usuario" id="usuario" value="' . $nome . '">
+            <span data-placeholder="Usuário"></span>
+        </div>
+
+        <div class="txtb">
+            <input type="password" name="senha" id="senha">
+            <span data-placeholder="Senha"></span>
+        </div>
+        ' . $msg . ' 
+        <input type="submit" class="logbtn" value="Entrar">
+        <div class="bottom-text">Não tem uma conta? <a href="#" data-toggle="modal" data-target="#criarCadastro">Cadastre-se</a></div>
+    </form>';
 }
 ?>
 
@@ -39,6 +35,7 @@ function formulario($msg, $nome = "")
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
     <title>Dividas</title>
 </head>
@@ -140,11 +137,7 @@ function formulario($msg, $nome = "")
         </div>
     </div>
 
-    <br><br>
-    <hr>
-    <footer class="container">
-        <p>Matheus Riquelme &copy; 2020 Sistema Segunda Igreja Batista</p>
-    </footer>
+    
 
 
     <script src="https://code.jquery.com/jquery-3.5.0.min.js" integrity="sha256-xNzN2a4ltkB44Mc/Jz3pT4iU1cmeR0FkXs4pru/JxaQ=" crossorigin="anonymous"></script>
@@ -152,7 +145,8 @@ function formulario($msg, $nome = "")
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
     <script src="https://unpkg.com/bootstrap-table@1.16.0/dist/bootstrap-table.min.js"></script>
     <script src="tata-master/dist/tata.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.11/jquery.mask.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" charset="utf-8"></script>
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.11/jquery.mask.min.js"></script> -->
 </body>
 
 <script type="text/javascript">
@@ -169,6 +163,15 @@ function formulario($msg, $nome = "")
         }
     }
     mascara()
+
+    $(".txtb input").on("focus",function(){
+        $(this).addClass("focus");
+      });
+
+      $(".txtb input").on("blur",function(){
+        if($(this).val() == "")
+        $(this).removeClass("focus");
+    });
 
     //     $("#cpf").keydown(function(){
     //     try {
