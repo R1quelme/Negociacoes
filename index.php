@@ -33,19 +33,9 @@ if (!is_logado()) {
     #aparecer {
         display: none;
     }
-
-    #load {
-        position: fixed;
-        display: block;
-        z-index: 9999;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-    }
 </style>
 
-<body id="body" onload="loading()">
+<body id="body">
         <?php
         if (empty($_SESSION['nome_dividas'])) {
         ?>
@@ -60,7 +50,6 @@ if (!is_logado()) {
         <?php
         }
         ?>
-    <div id="load"></div>
     <div class="table responsive">
         <div class="container">
             <?php
@@ -296,10 +285,6 @@ if (!is_logado()) {
     // document.getElementById("loading").style.display = "none";
     // document.getElementById("conteudo").style.display = "block";
     // });
-
-    function loading() {
-        $('#load').css('display', 'none');
-    }
 
     $('#valorTotal_negociar').mask('000.000.000.000.000,00', {
         reverse: true
