@@ -104,7 +104,6 @@ function dividasEmitidasEmissor(id_emissor, subtable) {
             // console.log("sucesso")
             criaTabela(subtable, JSON.parse(result))
         }
-
     })
 }
 var indice_table = 0;
@@ -248,13 +247,25 @@ function gerarDivida(event) {
         id_cad.push(cliente.id)
     })
 
+    
+    const objetoParaDividaParcela = {
+        id_cad: id_cad,
+        tipo_divida: $("#tipo_divida").val('parcelas'),
+        valor: retiraMascaraDinheiro($("#valor").val()),
+        vencimento: $("#vencimento").val(),
+        valorJuros: retiraMascaraDinheiro($("#valorJuros").val()),
+        cobranca: $("#cobranca").val(),
+        valorMulta: retiraMascaraDinheiro($("#valorMulta").val()),
+        tipo_juros: $("#tipo_juros").val()
+    }
+
     const objetoParaDivida = {
         id_cad: id_cad,
         tipo_divida: $("#tipo_divida").val(),
         valor: retiraMascaraDinheiro($("#valor").val()),
         vencimento: $("#vencimento").val(),
         valorJuros: retiraMascaraDinheiro($("#valorJuros").val()),
-        cobranca: $("#cobranca").val(),
+        cobranca: $("#cobranca").val(), 
         valorMulta: retiraMascaraDinheiro($("#valorMulta").val()),
         tipo_juros: $("#tipo_juros").val()
     }
