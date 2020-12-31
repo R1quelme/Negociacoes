@@ -1,10 +1,5 @@
 # Negociacoes
 
-<div align='center'>
-<img src="./.github/proffy.png" width='250'>
-
----
-
 <a href='#negociacoes'>NEGOCIAÇÕES </a>|
 <a href='#functionalities'>FUNCIONALIDADES </a>|
 <a href='#tecnologies'>TECNOLOGIAS </a>|
@@ -46,7 +41,9 @@ Sistema em desenvolvimento de simulamento de negociações de dividas. O sistema
 ## <p id='layout'>🎨 Layout ? </p>
 
 <div align='center'>
-<img src="./.github/capa.png" width='500'>
-<img src="./.github/print2.png" width='500'>
+<img src="./prints/crud.jpeg" width='500'>
+<img src="./prints/modal.jpeg" width='500'>
+<img src="./prints/crud2.jpeg" width='500'>
+<img src="./prints/modal2.jpeg" width='500'>
 
 </div>
