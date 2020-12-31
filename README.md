@@ -32,13 +32,13 @@ Sistema em desenvolvimento de simulamento de negociações de dividas. O sistema
 
 ## <p id='tecnologies'>💻 Tecnologias </p>
 
-<a href='https://pt-br.php.org/'>PHP</a>
+<a href='https://www.php.net/manual/pt_BR/intro-whatis.php'>PHP</a>
 <br/>
-<a href='https://www.javascript.org/'>JavaScript</a>
+<a href='https://www.javascript.com/'>JavaScript</a>
 <br/>
-<a href='https://mysql.org/'>MySQL</a>
+<a href='https://www.mysql.com/'>MySQL</a>
 <br/>
-<a href='https://htmlcss.dev/'>HTML/CSS</a>
+<a href='https://developer.mozilla.org/pt-BR/docs/Web/Guide/AJAX'>AJAX</a>
 <br/>
 
 ---
