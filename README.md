@@ -1,5 +1,3 @@
-# Negociacoes
-
 <a href='#negociacoes'>NEGOCIAÇÕES </a>|
 <a href='#functionalities'>FUNCIONALIDADES </a>|
 <a href='#tecnologies'>TECNOLOGIAS </a>|
